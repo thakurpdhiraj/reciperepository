@@ -126,7 +126,7 @@ public class RecipeController {
 	 * @return
 	 */
 	@PostMapping(consumes=MediaType.MULTIPART_FORM_DATA_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Recipe> saveRecipeWithMultiPart(@Valid @RequestPart Recipe recipe , @RequestPart("recipeImgFile") MultipartFile uploadFile){
+	public ResponseEntity<?> saveRecipeWithMultiPart(@Valid @RequestPart Recipe recipe , @RequestPart("recipeImgFile") MultipartFile uploadFile){
 
 		if(!uploadFile.isEmpty()) {
 			String path = "";
@@ -134,14 +134,18 @@ public class RecipeController {
 
 				path = FileUploadUtil.uploadFile(uploadFile);
 				LOGGER.info("File uploaded successfully to path "+path);
+				recipe.setRcpImagePath(path);
+
 			} catch (IOException ex) {
 				LOGGER.error("File upload failed  to path "+path , ex);
-				recipe.setRcpImagePath("");
+				List<String>list = new ArrayList<String>();
+				list.add(ex.getLocalizedMessage());
+				return new ResponseEntity<Object>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ", list),HttpStatus.BAD_REQUEST);
 			}
 
 			//could write the logic to delete the previous uploaded image
 
-			recipe.setRcpImagePath(path);
+
 		}
 
 
@@ -256,7 +260,7 @@ public class RecipeController {
 	 * @return
 	 */
 	@PutMapping(value="{id}", consumes=MediaType.MULTIPART_FORM_DATA_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Recipe> updateRecipe(@PathVariable("id") Long id, @Valid @RequestPart Recipe recipe, @RequestPart("recipeImgFile") MultipartFile uploadFile, Principal principal){
+	public ResponseEntity<?> updateRecipe(@PathVariable("id") Long id, @Valid @RequestPart Recipe recipe, @RequestPart("recipeImgFile") MultipartFile uploadFile, Principal principal){
 
 		recipe.setRcpId(id);
 		if(recipe.getRcpUpdatedBy()==null || recipe.getRcpUpdatedBy() == 0) {
@@ -272,6 +276,9 @@ public class RecipeController {
 				recipe.setRcpImagePath(path);
 			} catch (IOException ex) {
 				LOGGER.error("Error saving image ",ex);
+				List<String>list = new ArrayList<String>();
+				list.add(ex.getLocalizedMessage());
+				return new ResponseEntity<Object>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ", list),HttpStatus.BAD_REQUEST);
 			}			
 			//TODO:could write the logic to delete the previous uploaded image
 
