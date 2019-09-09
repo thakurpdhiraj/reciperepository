@@ -12,11 +12,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -31,13 +31,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name="recipes")
+@DynamicUpdate
 public class Recipe implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
 	@Id()
-	@SequenceGenerator(name="rcp_seq")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="rcp_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="rcpid",updatable=false,nullable=false)
 	private Long rcpId;
 
