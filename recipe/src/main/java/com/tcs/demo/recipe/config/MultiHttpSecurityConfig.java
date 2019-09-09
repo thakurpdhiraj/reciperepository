@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -113,6 +114,10 @@ public class MultiHttpSecurityConfig {
 	@Configuration
 	public  class  WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
+		
+		@Value("${spring.h2.console.path}")
+		String h2ConsolePath;
+		
 		@Override
 	    public void configure(AuthenticationManagerBuilder auth) throws Exception {
 			auth.authenticationProvider(authProvider());
@@ -122,7 +127,7 @@ public class MultiHttpSecurityConfig {
 		protected void configure(HttpSecurity http) throws Exception{
 			http.csrf().disable();
 			http.authorizeRequests().antMatchers("/login").permitAll();
-			http.authorizeRequests().antMatchers("/h2-console/**").permitAll().and().headers().frameOptions().disable();
+			http.authorizeRequests().antMatchers(h2ConsolePath+"/**").permitAll().and().headers().frameOptions().disable();
 //			http.authorizeRequests().antMatchers("/","/home").authenticated();
 			
 			http.authorizeRequests().anyRequest().authenticated().and().formLogin()
