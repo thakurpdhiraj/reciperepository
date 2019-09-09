@@ -3,8 +3,13 @@
  */
 package com.tcs.demo.recipe.service;
 
+import java.beans.FeatureDescriptor;
 import java.util.List;
+import java.util.stream.Stream;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,31 +52,10 @@ public class RecipeServiceImpl implements RecipeService {
 	
 	@Override
 	public Recipe updateRecipe(Recipe recipe) {
-		
-		Recipe existing = recipeRepository.findByRcpIdAndRcpRowState(recipe.getRcpId(), 1);
-		if(recipe.getRcpName() == null || recipe.getRcpName().equals("")) {
-			recipe.setRcpName(existing.getRcpName());
-		}
-		if(recipe.getRcpIngredientDescription()==null || recipe.getRcpIngredientDescription().equals("")) {
-			recipe.setRcpIngredientDescription(existing.getRcpIngredientDescription());
-		}
-		if(recipe.getRcpIsVegetarian()==null) {
-			recipe.setRcpIsVegetarian(existing.getRcpIsVegetarian());
-		}
-		
-		if(recipe.getRcpSuitableFor()==null) {
-			recipe.setRcpSuitableFor(existing.getRcpSuitableFor());
-		}
-		
-		if(recipe.getRcpUpdatedBy()==null || recipe.getRcpUpdatedBy() <= 0) {
-			recipe.setRcpUpdatedBy(existing.getRcpUpdatedBy());
-		}
-		
-		if(recipe.getRcpImagePath()==null || recipe.getRcpImagePath().equals("")){
-			recipe.setRcpImagePath(existing.getRcpImagePath());
-		}
-	
-		return recipeRepository.saveAndFlush(recipe);
+		Recipe existingRecipe = recipeRepository.findByRcpIdAndRcpRowState(recipe.getRcpId(), 1);
+		String[] ignoredProperties = getNullPropertyNames(recipe);
+		BeanUtils.copyProperties(recipe, existingRecipe,ignoredProperties);
+		return recipeRepository.save(existingRecipe);
 	}
 
 
@@ -99,6 +83,16 @@ public class RecipeServiceImpl implements RecipeService {
 		return recipeRepository.findAllByRcpRowState(1, pageable);
 	}
 
+	
+	private String[] getNullPropertyNames(Recipe recipe) {
+		BeanWrapper wrapped = new BeanWrapperImpl(recipe);
+		
+		return Stream.of(wrapped.getPropertyDescriptors())
+	            .map(FeatureDescriptor::getName)
+	            .filter(propertyName -> wrapped.getPropertyValue(propertyName) == null)
+	            .toArray(String[]::new);
+		
+	}
 
 
 }
