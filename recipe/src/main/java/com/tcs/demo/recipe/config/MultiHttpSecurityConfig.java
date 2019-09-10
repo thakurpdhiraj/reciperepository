@@ -128,6 +128,9 @@ public class MultiHttpSecurityConfig {
 			http.csrf().disable();
 			http.authorizeRequests().antMatchers("/login").permitAll();
 			http.authorizeRequests().antMatchers(h2ConsolePath+"/**").permitAll().and().headers().frameOptions().disable();
+			http.authorizeRequests().antMatchers("/v2/api-docs").permitAll().and().headers().frameOptions().disable();
+			http.authorizeRequests().antMatchers("/swagger-ui.html").permitAll().and().headers().frameOptions().disable();
+			
 //			http.authorizeRequests().antMatchers("/","/home").authenticated();
 			
 			http.authorizeRequests().anyRequest().authenticated().and().formLogin()
