@@ -27,6 +27,7 @@ import com.tcs.demo.recipe.bean.Recipe;
 import com.tcs.demo.recipe.bean.Recipe.PeopleGroup;
 import com.tcs.demo.recipe.service.RecipeService;
 /**
+ * Unit test cases for Recipe Api
  * @author Dhiraj
  *
  */
@@ -136,5 +137,134 @@ public class RecipeApiTest {
 		ResponseEntity<Void> response = restTemplate.withBasicAuth("admin", "password")
 				.exchange(requestEntity, Void.class);
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+	}
+	
+	@Test
+	public void testForUpdateWithoutRecipeName() throws Exception{
+		Recipe recipe = new RecipeBuilder().withId(2L)
+				.withUpdatedBy(2L)
+				.withSuitableFor(PeopleGroup.MORETHANTEN)
+				.withIsVegetarian(false)
+				.build();
+		
+		RequestEntity<Recipe> requestEntity = RequestEntity
+				.put(new URI("http://localhost:" + port + "/kitchenworld/api/recipes/2"))				
+				.body(recipe);
+		
+		ResponseEntity<Recipe> response = restTemplate.withBasicAuth("admin", "password")
+			.exchange(requestEntity, Recipe.class);
+		assertEquals(HttpStatus.BAD_REQUEST,response.getStatusCode());
+	}
+	
+	//authentication tests
+	@Test
+	public void testForGetWithoutAuthorization() throws Exception{
+		ResponseEntity<Recipe> response = restTemplate
+				.getForEntity(new URL("http://localhost:" + port + "/kitchenworld/api/recipes/1").toString(), Recipe.class);
+
+		assertEquals(HttpStatus.UNAUTHORIZED,response.getStatusCode());
+	}
+	
+	@Test
+	public void testForPostWithoutAuthorization() throws Exception{
+		Recipe recipe = new RecipeBuilder().withName("test-recipe")
+				.withCookingInstruction("test - instructions")
+				.withIngredientDescription("test-ingrediens")
+				.withImagePath("image/caponata-pasta.jpg")
+				.withCreatedAt( LocalDateTime.now())
+				.withCreatedBy(1L)
+				.withSuitableFor(PeopleGroup.FIVETOTEN)
+				.withIsVegetarian(true)
+				.build();
+		
+		RequestEntity<Recipe> requestEntity = RequestEntity
+				.post(new URI("http://localhost:" + port + "/kitchenworld/api/recipes/"))				
+				.body(recipe);
+		
+		ResponseEntity<Recipe> response = restTemplate
+				.exchange(requestEntity, Recipe.class);
+		
+		assertEquals(HttpStatus.UNAUTHORIZED,response.getStatusCode());
+	}
+	
+	@Test
+	public void testForPutWithoutAuthorization() throws Exception{
+		Recipe recipe = new RecipeBuilder().withId(2L)
+				.withUpdatedBy(2L)
+				.withSuitableFor(PeopleGroup.MORETHANTEN)
+				.withIsVegetarian(false)
+				.build();
+		
+		RequestEntity<Recipe> requestEntity = RequestEntity
+				.put(new URI("http://localhost:" + port + "/kitchenworld/api/recipes/2"))				
+				.body(recipe);
+		
+		ResponseEntity<Recipe> response = restTemplate
+			.exchange(requestEntity, Recipe.class);
+		assertEquals(HttpStatus.UNAUTHORIZED,response.getStatusCode());
+	}
+	
+	@Test
+	public void testForDeleteWithoutAuthorization() throws Exception{
+		RequestEntity<Void> requestEntity = RequestEntity
+				.delete(new URI("http://localhost:" + port + "/kitchenworld/api/recipes/2")).build();
+		
+		ResponseEntity<Void> response = restTemplate
+				.exchange(requestEntity, Void.class);
+		assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+	}
+	//authorization tests
+	@Test
+	public void testForPostWithoutAdminRights() throws Exception{
+		Recipe recipe = new RecipeBuilder().withName("test-recipe")
+				.withCookingInstruction("test - instructions")
+				.withIngredientDescription("test-ingrediens")
+				.withImagePath("image/caponata-pasta.jpg")
+				.withCreatedAt( LocalDateTime.now())
+				.withCreatedBy(1L)
+				.withSuitableFor(PeopleGroup.FIVETOTEN)
+				.withIsVegetarian(true)
+				.build();
+		
+		RequestEntity<Recipe> requestEntity = RequestEntity
+				.post(new URI("http://localhost:" + port + "/kitchenworld/api/recipes/"))				
+				.body(recipe);
+		
+		ResponseEntity<Recipe> response = restTemplate.withBasicAuth("user", "password")
+				.exchange(requestEntity, Recipe.class);
+		
+		assertEquals(HttpStatus.FORBIDDEN,response.getStatusCode());
+	}
+	@Test
+	public void testForDeleteWithoutAdminRights() throws Exception{
+		RequestEntity<Void> requestEntity = RequestEntity
+				.delete(new URI("http://localhost:" + port + "/kitchenworld/api/recipes/2")).build();
+		
+		ResponseEntity<Void> response = restTemplate.withBasicAuth("user", "password")
+				.exchange(requestEntity, Void.class);
+		assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+	}
+	@Test
+	public void testForPutWithoutAdminRights() throws Exception{
+		Recipe recipe = new RecipeBuilder().withId(2L)
+				.withUpdatedBy(2L)
+				.withSuitableFor(PeopleGroup.MORETHANTEN)
+				.withIsVegetarian(false)
+				.build();
+		
+		RequestEntity<Recipe> requestEntity = RequestEntity
+				.put(new URI("http://localhost:" + port + "/kitchenworld/api/recipes/2"))				
+				.body(recipe);
+		
+		ResponseEntity<Recipe> response = restTemplate.withBasicAuth("user", "password")
+			.exchange(requestEntity, Recipe.class);
+		assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+	}
+	@Test
+	public void testForGetWithoutAdminRights() throws Exception{
+		ResponseEntity<Recipe> response = restTemplate.withBasicAuth("user", "password")
+				.getForEntity(new URL("http://localhost:" + port + "/kitchenworld/api/recipes/1").toString(), Recipe.class);
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
 }
