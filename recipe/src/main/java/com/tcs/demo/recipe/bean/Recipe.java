@@ -45,7 +45,6 @@ public class Recipe implements Serializable{
 	@Column(name="rcpname")
 	private String rcpName;
 
-	@NotNull
 	@Lob
 	@Column(name="rcpingredientdescription")
 	private String rcpIngredientDescription;
