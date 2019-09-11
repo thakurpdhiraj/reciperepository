@@ -23,10 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.tcs.demo.recipe.service.SecurityUserDetailService;
 import com.tcs.demo.recipe.util.EncryptionUtil;
 
-
-
-
-
 /**
  * Manage spring security configuration to web and api access
  * @author Dhiraj
@@ -128,8 +124,8 @@ public class MultiHttpSecurityConfig {
 			http.csrf().disable();
 			http.authorizeRequests().antMatchers("/login").permitAll();
 			http.authorizeRequests().antMatchers(h2ConsolePath+"/**").permitAll().and().headers().frameOptions().disable();
-			http.authorizeRequests().antMatchers("/v2/api-docs").permitAll().and().headers().frameOptions().disable();
-			http.authorizeRequests().antMatchers("/swagger-ui.html").permitAll().and().headers().frameOptions().disable();
+			http.authorizeRequests().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", 
+					"/swagger-ui.html", "/webjars/**", "/swagger-resources/configuration/ui", "/swagge‌​r-ui.html", "/swagger-resources/configuration/security").permitAll();
 			
 //			http.authorizeRequests().antMatchers("/","/home").authenticated();
 			
