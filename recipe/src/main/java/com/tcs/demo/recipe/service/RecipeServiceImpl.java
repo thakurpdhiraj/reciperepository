@@ -41,12 +41,11 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public void deleteRecipe(Long rcpId, Long editor) {
+	public Recipe deleteRecipe(Long rcpId, Long editor) {
 		Recipe existingRecipe = recipeRepository.findByRcpIdAndRcpRowState(rcpId, 1);
 		existingRecipe.setRcpRowState(-1);
 		existingRecipe.setRcpUpdatedBy(editor);
-		 recipeRepository.saveAndFlush(existingRecipe);
-		
+		 return recipeRepository.saveAndFlush(existingRecipe);		
 	}
 
 	

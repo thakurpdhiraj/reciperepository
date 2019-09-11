@@ -28,7 +28,7 @@ public interface RecipeService {
 	 * Delete a recipe using id
 	 * @param id
 	 */
-	void deleteRecipe(Long rcpId,Long editor);
+	Recipe deleteRecipe(Long rcpId,Long editor);
 	
 	/**
 	 * Update an exising recipe
