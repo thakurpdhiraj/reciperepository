@@ -38,9 +38,8 @@ import com.tcs.demo.recipe.service.RecipeService;
 import com.tcs.demo.recipe.service.UserService;
 import com.tcs.demo.recipe.util.FileUploadUtil;
 
-
-
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * Controller to handle HTTP Operations for Recipe 
@@ -50,6 +49,7 @@ import com.tcs.demo.recipe.util.FileUploadUtil;
 
 @RestController
 @RequestMapping("api/recipes")
+@Api(value="Recipe  Controller")
 public class RecipeController {
 
 
@@ -65,8 +65,9 @@ public class RecipeController {
 	 * Get all recipes based on the limit and page parameter 
 	 * @return
 	 */
+	@ApiOperation(value = "View a list of available recipes",response = ResponseEntity.class)
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Recipe>> getAllRecipeAndSize(@RequestParam(value ="limit",required=false) Integer limit,@RequestParam(required=false,value="page") Integer page) {
+	public ResponseEntity<List<Recipe>> getAllRecipe(@RequestParam(value ="limit",required=false) Integer limit,@RequestParam(required=false,value="page") Integer page) {
 		List<Recipe> recipeList = new ArrayList<Recipe>();
 		if(limit==null && page==null) {
 			recipeList = recipeService.getAllRecipes();
@@ -91,8 +92,9 @@ public class RecipeController {
 	 * @param id
 	 * @return
 	 */
+	@ApiOperation(value = "Get a single recipe  by id",response = ResponseEntity.class)
 	@GetMapping(value = "{id}", produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Recipe> getRecipe(@PathVariable("id") Long id){
+	public ResponseEntity<Recipe> getRecipeById(@PathVariable("id") Long id){
 
 		Recipe recipe = recipeService.getRecipe(id);
 
@@ -107,6 +109,7 @@ public class RecipeController {
 	 * Get the size of valid recipes
 	 * @return
 	 */
+	@ApiOperation(value = "Get the total number of recipes",response = ResponseEntity.class)
 	@GetMapping(value="/size" , produces=MediaType.TEXT_HTML_VALUE)
 	public ResponseEntity<String> getTotalRecipes() {
 
@@ -126,6 +129,7 @@ public class RecipeController {
 	 * @param uploadFile
 	 * @return
 	 */
+	@ApiOperation(value = "Add a new recipe along with an image",response = ResponseEntity.class)
 	@PostMapping(consumes=MediaType.MULTIPART_FORM_DATA_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> saveRecipeWithMultiPart(@Valid @RequestPart Recipe recipe , @RequestPart("recipeImgFile") MultipartFile uploadFile){
 
@@ -144,12 +148,7 @@ public class RecipeController {
 				return new ResponseEntity<Object>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ", list),HttpStatus.BAD_REQUEST);
 			}
 
-			//could write the logic to delete the previous uploaded image
-
-
 		}
-
-
 		recipe = recipeService.addRecipe(recipe);
 
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -165,6 +164,7 @@ public class RecipeController {
 	 * @param recipe
 	 * @return
 	 */
+	@ApiOperation(value = "Add a new recipe",response = ResponseEntity.class)
 	@PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Recipe> saveRecipe(@Valid @RequestBody Recipe recipe){
 
@@ -178,39 +178,7 @@ public class RecipeController {
 		return  ResponseEntity.created(uri).body(recipe); 
 	}
 
-	/**
-	 * POST to upload image file for a recipe id 
-	 * @mapsTo /kitchenworld/api/recipes/images/{id}
-	 * @param id
-	 * @param uploadfile
-	 * @return
-	 */
-	@PostMapping(value="/images/{id}",consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Object> uploadImageFile(@PathVariable("id") Long id,
-			@RequestParam("recipeImgFile") MultipartFile uploadfile) {
-		if (uploadfile.isEmpty()) {
-			return new ResponseEntity<Object>(new ApiError(HttpStatus.BAD_REQUEST, " File to upload was empty ", null),HttpStatus.BAD_REQUEST);
-		}
-
-		String path = "";
-		try {
-
-			path = FileUploadUtil.uploadFile(uploadfile);
-
-		} catch (IOException ex) {
-			List<String>list = new ArrayList<String>();
-			list.add(ex.getLocalizedMessage());
-			return new ResponseEntity<Object>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ", list),HttpStatus.BAD_REQUEST);
-		}
-		LOGGER.info("File uploaded successfully to path "+path);
-		//could write the logic to delete the previous uploaded image
-		//check if path is empty
-		recipeService.updateRecipeImagePath(id, path);
-
-
-		return ResponseEntity.ok(path);
-
-	}
+	
 
 	/**
 	 * Delete a recipe and update table with the person deleting the  recipe 
@@ -219,6 +187,7 @@ public class RecipeController {
 	 * @param editor
 	 * @return
 	 */
+	@ApiOperation(value = "Delete a recipe by Id",response = ResponseEntity.class)
 	@DeleteMapping("{id}")
 	public ResponseEntity<Void> deleteRecipe(@PathVariable("id") Long id, @RequestParam("editor") Long editor){
 
@@ -235,6 +204,7 @@ public class RecipeController {
 	 * @param principal
 	 * @return
 	 */
+	@ApiOperation(value = "Update a recipe by id",response = ResponseEntity.class)
 	@PutMapping(value="{id}", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Recipe> updateRecipe(@PathVariable("id") Long id, @Valid @RequestBody Recipe recipe, Principal principal){
 
@@ -260,6 +230,7 @@ public class RecipeController {
 	 * @param principal
 	 * @return
 	 */
+	@ApiOperation(value = "Update a recipe by id along with updating the recipe  image",response = ResponseEntity.class)
 	@PutMapping(value="{id}", consumes=MediaType.MULTIPART_FORM_DATA_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateRecipe(@PathVariable("id") Long id, @Valid @RequestPart Recipe recipe, @RequestPart("recipeImgFile") MultipartFile uploadFile, Principal principal){
 
@@ -281,7 +252,6 @@ public class RecipeController {
 				list.add(ex.getLocalizedMessage());
 				return new ResponseEntity<Object>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ", list),HttpStatus.BAD_REQUEST);
 			}			
-			//TODO:could write the logic to delete the previous uploaded image
 
 		}
 
