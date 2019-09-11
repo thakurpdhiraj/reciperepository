@@ -20,10 +20,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.tcs.demo.recipe.bean.Recipe;
+import com.tcs.demo.recipe.builder.RecipeBuilder;
 import com.tcs.demo.recipe.repository.RecipeRespository;
 import com.tcs.demo.recipe.service.RecipeService;
 import com.tcs.demo.recipe.service.RecipeServiceImpl;
-import com.tcs.demo.recipe.test.RecipeBuilder;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class RecipeServiceTest {
