@@ -43,7 +43,7 @@ public class MvcController {
 		String encodedBasic = Base64.getEncoder() 
 				.encodeToString((sessionUser.getUsrLoginId()+":"+EncryptionUtil.decrypt(sessionUser.getUsrPassword())) .getBytes());
 		response.addCookie(new Cookie("ba",encodedBasic)); // basic authentication header value of encoded username:password 
-		ModelAndView mv = new ModelAndView ("redirect:home.html");
-		return mv;
+		return new ModelAndView ("redirect:home.html");
+		
 	}
 }

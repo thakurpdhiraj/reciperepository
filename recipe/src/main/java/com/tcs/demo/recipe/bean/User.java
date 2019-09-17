@@ -34,7 +34,7 @@ public class User implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="usrid",updatable=false,nullable=false)
 	private Long usrId;
-	
+
 	@NotNull
 	@NotEmpty
 	@Column(name="usrname",nullable=false)
@@ -52,11 +52,11 @@ public class User implements Serializable{
 
 	@Column(name="usrisadmin")
 	private Boolean usrIsAdmin ;//default value in case not set by api calls
-	
+
 	@Column(name="usrrowstate")
 	private Integer usrRowState ; //default value in case not set by api calls
 
-	
+
 	public User() {
 		super();
 	}
@@ -209,8 +209,8 @@ public class User implements Serializable{
 		return "User [usrId=" + usrId + ", usrName=" + usrName + ", usrLoginId=" + usrLoginId + ", usrPassword="
 				+ usrPassword + ", usrIsAdmin=" + usrIsAdmin + ", usrrowstate=" + usrRowState + "]";
 	}
-	
-	
-	
+
+
+
 
 }

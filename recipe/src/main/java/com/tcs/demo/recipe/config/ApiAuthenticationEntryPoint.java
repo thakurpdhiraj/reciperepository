@@ -35,7 +35,7 @@ public class ApiAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 		//Authentication failed, send error response.
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); 
 		response.addHeader("WWW-Authenticate", "Basic realm=" + getRealmName() + "");
-		List<String>list = new ArrayList<String>();
+		List<String>list = new ArrayList<>();
 		list.add(authException.getLocalizedMessage());
 		ApiError error = new ApiError(HttpStatus.UNAUTHORIZED, "Basic Authentication required to access protected resource", list);
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);

@@ -3,7 +3,6 @@
  */
 package com.tcs.demo.recipe.config;
 
-import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,41 +29,41 @@ import com.tcs.demo.recipe.util.EncryptionUtil;
  */
 @EnableWebSecurity
 public class MultiHttpSecurityConfig {
-	
+
 	@Autowired
 	SecurityUserDetailService securityUserDetailService;
-	
+
 	@Bean
-    public PasswordEncoder passwordEncoder() {
-        return new PasswordEncoder() {
-            @Override
-            public String encode(CharSequence rawPassword) {
-                try {
+	public PasswordEncoder passwordEncoder() {
+		return new PasswordEncoder() {
+			@Override
+			public String encode(CharSequence rawPassword) {
+				try {
 					return EncryptionUtil.encrypt(rawPassword.toString());
-				} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				} catch (GeneralSecurityException e) {
 					return null;
 				}
-            }
- 
-            @Override
-            public boolean matches(CharSequence rawPassword, String encodedPassword) {
-                try {
+			}
+
+			@Override
+			public boolean matches(CharSequence rawPassword, String encodedPassword) {
+				try {
 					return rawPassword.toString().equals(EncryptionUtil.decrypt(encodedPassword));
-				} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				} catch (GeneralSecurityException e) {
 					return false;
 				}
-            }
-        };
-    }
-	
+			}
+		};
+	}
+
 	@Bean
-    public DaoAuthenticationProvider authProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(securityUserDetailService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-	
+	public DaoAuthenticationProvider authProvider() {
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(securityUserDetailService);
+		authProvider.setPasswordEncoder(passwordEncoder());
+		return authProvider;
+	}
+
 	/**
 	 * Manage spring security config to api calls
 	 * @author Dhiraj
@@ -73,9 +72,12 @@ public class MultiHttpSecurityConfig {
 	@Configuration
 	@Order(1)
 	public  class ApiSecurityConfig extends WebSecurityConfigurerAdapter{
-		
+
 		@Autowired
 		ApiAuthenticationEntryPoint apiAuthenticationEntryPoint;
+
+		private static final String API_URL = "/api/**";
+		private static final String ADMIN = "ADMIN";
 
 		@Override
 		public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -85,23 +87,22 @@ public class MultiHttpSecurityConfig {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception{
 
-			http.antMatcher("/api/**")                             
-            .authorizeRequests()
-            .antMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER","ADMIN")
-			.antMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
-			.antMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
-			.antMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
-//             .anyRequest().hasRole("ADMIN")
-             .and()
-            .httpBasic()
-            .realmName("TCS_RECIPE") // exception caused if not specified : Error creating bean with name 'apiAuthenticationEntryPoint': java.lang.IllegalArgumentException: realmName must be specified 
-           .and().exceptionHandling() .authenticationEntryPoint(apiAuthenticationEntryPoint).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
+			http.antMatcher(API_URL)                             
+			.authorizeRequests()
+			.antMatchers(HttpMethod.GET, API_URL).hasAnyRole("USER",ADMIN)
+			.antMatchers(HttpMethod.POST, API_URL).hasRole(ADMIN)
+			.antMatchers(HttpMethod.PUT, API_URL).hasRole(ADMIN)
+			.antMatchers(HttpMethod.DELETE, API_URL).hasRole(ADMIN)
+			.and()
+			.httpBasic()
+			.realmName("TCS_RECIPE") // exception caused if not specified : Error creating bean with name 'apiAuthenticationEntryPoint': java.lang.IllegalArgumentException: realmName must be specified 
+			.and().exceptionHandling() .authenticationEntryPoint(apiAuthenticationEntryPoint).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
 			.csrf().disable()
 			.formLogin().disable();
 		}
 	}
-	
+
 	/**
 	 * Manage spring security config for web calls
 	 * @author Dhiraj
@@ -110,34 +111,34 @@ public class MultiHttpSecurityConfig {
 	@Configuration
 	public  class  WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
-		
+		private static final String LOGIN_URL = "/login";
+
+
 		@Value("${spring.h2.console.path}")
 		String h2ConsolePath;
-		
+
 		@Override
-	    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		public void configure(AuthenticationManagerBuilder auth) throws Exception {
 			auth.authenticationProvider(authProvider());
 		}
-		
+
 		@Override
 		protected void configure(HttpSecurity http) throws Exception{
 			http.csrf().disable();
-			http.authorizeRequests().antMatchers("/login").permitAll();
+			http.authorizeRequests().antMatchers(LOGIN_URL).permitAll();
 			http.authorizeRequests().antMatchers(h2ConsolePath+"/**").permitAll().and().headers().frameOptions().disable();
 			http.authorizeRequests().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", 
 					"/swagger-ui.html", "/webjars/**", "/swagger-resources/configuration/ui", "/swagge‌​r-ui.html", "/swagger-resources/configuration/security").permitAll();
-			
-//			http.authorizeRequests().antMatchers("/","/home").authenticated();
-			
+
 			http.authorizeRequests().anyRequest().authenticated().and().formLogin()
-			.loginPage("/login")
+			.loginPage(LOGIN_URL)
 			.loginProcessingUrl("/perform_login")
 			.defaultSuccessUrl("/home")
 			.failureUrl("/login?error=true")
 			.usernameParameter("username")
 			.passwordParameter("password")
-			.and().logout().logoutUrl("/logout").logoutSuccessUrl("/login");
-			
+			.and().logout().logoutUrl("/logout").logoutSuccessUrl(LOGIN_URL);
+
 		}
 	}
 }

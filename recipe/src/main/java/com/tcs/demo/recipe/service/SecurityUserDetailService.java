@@ -22,13 +22,13 @@ public class SecurityUserDetailService implements UserDetailsService{
 	UserService  userService;
 	
 	@Override
-	public UserDetails loadUserByUsername(String userLoginId) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String userLoginId) {
 		User user = userService.getUserByLoginId(userLoginId);
 		if (user == null) {
 			throw new UsernameNotFoundException("User " + userLoginId + " was not found in the database");
 		}
 		
-		 List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
+		 List<GrantedAuthority> grantList = new ArrayList<>();
 		 if(user.getUsrIsAdmin()) {
 			 GrantedAuthority adminAuthority= new SimpleGrantedAuthority("ROLE_ADMIN");
 			 GrantedAuthority userAuthority= new SimpleGrantedAuthority("ROLE_USER");
@@ -40,10 +40,10 @@ public class SecurityUserDetailService implements UserDetailsService{
 		 }
 		 
 		 
-		   UserDetails userDetails = (UserDetails) new org.springframework.security.core.userdetails.User(user.getUsrLoginId(), 
+		   return new org.springframework.security.core.userdetails.User(user.getUsrLoginId(), 
 				   user.getUsrPassword()	, grantList);
 	 
-	        return userDetails;
+	     
 	}
 
 }

@@ -49,14 +49,7 @@ public interface RecipeService {
 	 * @return List<Recipe>
 	 */
 	List<Recipe> getAllRecipes();
-	
-	/**
-	 * Update the path of the image
-	 * @param id
-	 * @param path
-	 */
-	void updateRecipeImagePath(Long rcpId, String path);
-	
+		
 	/**
 	 * Returns the Page object containing the list of recipe with passed limit and page number
 	 * @param pageNumber

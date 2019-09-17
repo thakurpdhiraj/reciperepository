@@ -69,10 +69,6 @@ public class RecipeServiceImpl implements RecipeService {
 		return recipeRepository.findAllByRcpRowState(1);
 	}
 
-	@Override
-	public void updateRecipeImagePath(Long  rcpId, String path) {
-	}
-
 	/* (non-Javadoc)
 	 * @see com.tcs.recipe_jpa.service.RecipeService#getRecipes(int, int)
 	 */

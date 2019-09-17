@@ -53,7 +53,7 @@ import io.swagger.annotations.ApiOperation;
 public class RecipeController {
 
 
-	private final static Logger LOGGER = LogManager.getLogger(RecipeController.class);
+	private static final  Logger LOGGER = LogManager.getLogger(RecipeController.class);
 
 	@Autowired
 	RecipeService recipeService;
@@ -68,7 +68,7 @@ public class RecipeController {
 	@ApiOperation(value = "View a list of available recipes",response = ResponseEntity.class)
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Recipe>> getAllRecipe(@RequestParam(value ="limit",required=false) Integer limit,@RequestParam(required=false,value="page") Integer page) {
-		List<Recipe> recipeList = new ArrayList<Recipe>();
+		List<Recipe> recipeList = new ArrayList<>();
 		if(limit==null && page==null) {
 			recipeList = recipeService.getAllRecipes();
 		}
@@ -131,7 +131,7 @@ public class RecipeController {
 	 */
 	@ApiOperation(value = "Add a new recipe along with an image",response = ResponseEntity.class)
 	@PostMapping(consumes=MediaType.MULTIPART_FORM_DATA_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> saveRecipeWithMultiPart(@Valid @RequestPart Recipe recipe , @RequestPart("recipeImgFile") MultipartFile uploadFile){
+	public ResponseEntity<Object> saveRecipeWithMultiPart(@Valid @RequestPart Recipe recipe , @RequestPart("recipeImgFile") MultipartFile uploadFile){
 
 		if(!uploadFile.isEmpty()) {
 			String path = "";
@@ -143,9 +143,9 @@ public class RecipeController {
 
 			} catch (IOException ex) {
 				LOGGER.error("File upload failed  to path "+path , ex);
-				List<String>list = new ArrayList<String>();
+				List<String>list = new ArrayList<>();
 				list.add(ex.getLocalizedMessage());
-				return new ResponseEntity<Object>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ", list),HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ", list),HttpStatus.BAD_REQUEST);
 			}
 
 		}
@@ -209,7 +209,7 @@ public class RecipeController {
 	public ResponseEntity<Recipe> updateRecipe(@PathVariable("id") Long id, @Valid @RequestBody Recipe recipe, Principal principal){
 
 		recipe.setRcpId(id);
-		if(recipe.getRcpUpdatedBy()==null || recipe.getRcpUpdatedBy() == null) {
+		if(recipe.getRcpUpdatedBy()==null) {
 			recipe.setRcpUpdatedBy(userService.getUserByLoginId(principal.getName()).getUsrId());
 		}
 		Recipe updatedRecipe = recipeService.updateRecipe(recipe);
@@ -248,9 +248,9 @@ public class RecipeController {
 				recipe.setRcpImagePath(path);
 			} catch (IOException ex) {
 				LOGGER.error("Error saving image ",ex);
-				List<String>list = new ArrayList<String>();
+				List<String>list = new ArrayList<>();
 				list.add(ex.getLocalizedMessage());
-				return new ResponseEntity<Object>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ", list),HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ", list),HttpStatus.BAD_REQUEST);
 			}			
 
 		}

@@ -48,7 +48,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	@Override
 	protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		List<String>list = new ArrayList<String>();
+		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage());
 		return buildErrorResponse(new ApiError(HttpStatus.METHOD_NOT_ALLOWED, "Method  allowed: "+ex.getSupportedHttpMethods(), list));
 
@@ -56,10 +56,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
-			HttpHeaders headers, HttpStatus status, WebRequest request) {		
-		System.out.println(ex.getSupportedMediaTypes());
-		ex.printStackTrace();
-		List<String>list = new ArrayList<String>();
+			HttpHeaders headers, HttpStatus status, WebRequest request) {	
+		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage());
 		return buildErrorResponse(new ApiError(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "MediaType not supported", list));
 	}
@@ -68,7 +66,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	@Override
 	protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		List<String>list = new ArrayList<String>();
+		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage()); 
 		return buildErrorResponse(new ApiError(HttpStatus.BAD_REQUEST, ex.getParameterName()+" is missing", list));
 	}
@@ -77,7 +75,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	@Override
 	protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
-		List<String>list = new ArrayList<String>();
+		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage()); 
 		return buildErrorResponse(new ApiError(HttpStatus.BAD_REQUEST, "Malformed Request Object", list));
 	}
@@ -85,7 +83,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {	
-		List<String>list = new ArrayList<String>();
+		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage());
 		return buildErrorResponse(new ApiError(HttpStatus.BAD_REQUEST, "Malformed Request Object", list));
 	}
@@ -104,44 +102,38 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	@Override
 	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
-		List<String>list = new ArrayList<String>();
+		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage());
 		return	buildErrorResponse(new ApiError(HttpStatus.NOT_FOUND, ex.getHttpMethod()+" not found for requested  resource", list));
 	}
 
 
-	@Override
-	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
-			HttpStatus status, WebRequest request) {
-		return super.handleExceptionInternal(ex, body, headers, status, request);
-	}
-
 	//Custom Exceptions
 
 	@ExceptionHandler({ Forbidden.class})
 	protected ResponseEntity<Object> handleForbiddenRequest(Forbidden ex, WebRequest request) {
-		List<String>list = new ArrayList<String>();
+		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage());
 		return	buildErrorResponse(new ApiError(HttpStatus.FORBIDDEN, "Access Denied for resource", list));
 	}
 
 	@ExceptionHandler({ Unauthorized.class })
 	protected ResponseEntity<Object> handleUnauthrizedRequest(Unauthorized ex, WebRequest request) {
-		List<String>list = new ArrayList<String>();
+		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage());
 		return	buildErrorResponse(new ApiError(HttpStatus.UNAUTHORIZED, "Unauthorized Access to resource", list));
 	}
 
 	@ExceptionHandler({UserNotFoundException.class})
 	protected  ResponseEntity<Object>  handleUserNotFoundException(Exception ex,HttpServletResponse response)  {
-		List<String>list = new ArrayList<String>();
+		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage());
 		return	buildErrorResponse(new ApiError(HttpStatus.NOT_FOUND, "User Not found", list));
 	}
 
 	@ExceptionHandler({RecipeNotFoundException.class})
 	protected  ResponseEntity<Object>  handleRecipeNotFoundException(Exception ex,HttpServletResponse response) {
-		List<String>list = new ArrayList<String>();
+		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage());
 		return	buildErrorResponse(new ApiError(HttpStatus.NOT_FOUND, "Recipe Not found", list));
 	}
@@ -149,15 +141,15 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
 	@ExceptionHandler({IllegalArgumentException.class, NullPointerException.class})
 	protected  ResponseEntity<Object>  handleBadRequests(Exception ex,HttpServletResponse response) {
-		List<String>list = new ArrayList<String>();
+		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage());
 		return	buildErrorResponse(new ApiError(HttpStatus.BAD_REQUEST, "Bad Request", list));
 	} 
 	
 	@ExceptionHandler(MultipartException.class)
-	protected ResponseEntity<?> handleMultiPartException(MultipartException ex ,HttpServletRequest request) {
+	protected ResponseEntity<Object> handleMultiPartException(MultipartException ex ,HttpServletRequest request) {
 
-		List<String>list = new ArrayList<String>();
+		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage());
 		return	buildErrorResponse(new ApiError(HttpStatus.BAD_REQUEST, "Bad Request", list));
 
@@ -170,7 +162,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	 * @return ResponseEntity<Object>
 	 */
 	private ResponseEntity<Object> buildErrorResponse(ApiError error){
-		return new ResponseEntity<Object>(new GenericErrorWrapper(error),error.getStatus());
+		return new ResponseEntity<>(new GenericErrorWrapper(error),error.getStatus());
 	}
 
 	/**

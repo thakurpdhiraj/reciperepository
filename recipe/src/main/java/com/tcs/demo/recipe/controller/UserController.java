@@ -57,7 +57,7 @@ public class UserController {
 		if(user == null) {
 			throw new UserNotFoundException("User not found with id  "+id);
 		}else {
-			return  new ResponseEntity<User>(user, HttpStatus.OK);
+			return  new ResponseEntity<>(user, HttpStatus.OK);
 		}
 	}
 
@@ -74,7 +74,7 @@ public class UserController {
 		if(user == null) {
 			throw new UserNotFoundException("User not found with loginid "+userLoginId);
 		}else {
-			return  new ResponseEntity<User>(user, HttpStatus.OK);
+			return  new ResponseEntity<>(user, HttpStatus.OK);
 		}
 	}
 
