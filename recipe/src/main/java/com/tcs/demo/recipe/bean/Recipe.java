@@ -95,11 +95,6 @@ public class Recipe implements Serializable{
 	@Column(name="rcprowstate")
 	private Integer rcpRowState;
 
-
-	public Recipe() {
-		super();
-	}
-
 	public Recipe(Long rcpId, @NotNull String rcpName, @NotNull String rcpIngredientDescription,
 			String rcpCookingInstruction, String rcpImagePath, Boolean rcpIsVegetarian, PeopleGroup rcpSuitableFor,
 			Long rcpCreatedBy, LocalDateTime rcpCreatedAt, Long rcpUpdatedBy, LocalDateTime rcpUpdatedAt,

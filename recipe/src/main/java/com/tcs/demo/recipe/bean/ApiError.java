@@ -107,52 +107,5 @@ public class ApiError implements Serializable {
 	public void setDebugMessage( List<String>  debugMessage) {
 		this.debugMessage = debugMessage;
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((debugMessage == null) ? 0 : debugMessage.hashCode());
-		result = prime * result + ((message == null) ? 0 : message.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ApiError other = (ApiError) obj;
-		if (debugMessage == null) {
-			if (other.debugMessage != null)
-				return false;
-		} else if (!debugMessage.equals(other.debugMessage))
-					return false;
-		if (message == null) {
-			if (other.message != null)
-				return false;
-		} else if (!message.equals(other.message))
-					return false;
-		if (status != other.status)
-			return false;
-		if (timestamp == null) {
-			if (other.timestamp != null)
-				return false;
-		} else if (!timestamp.equals(other.timestamp))
-					return false;
-		return true;
-	}
-	
-	
+		
 }

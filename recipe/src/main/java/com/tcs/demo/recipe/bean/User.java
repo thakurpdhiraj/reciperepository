@@ -56,11 +56,6 @@ public class User implements Serializable{
 	@Column(name="usrrowstate")
 	private Integer usrRowState ; //default value in case not set by api calls
 
-
-	public User() {
-		super();
-	}
-
 	public User(Long usrId, @NotNull String usrName, @NotNull String usrLoginId, @NotNull String usrPassword,
 			Boolean usrIsAdmin, Integer usrRowState) {
 		super();
@@ -201,9 +196,7 @@ public class User implements Serializable{
 					return false;
 		return true;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+
 	@Override
 	public String toString() {
 		return "User [usrId=" + usrId + ", usrName=" + usrName + ", usrLoginId=" + usrLoginId + ", usrPassword="

@@ -3,7 +3,6 @@
  */
 package com.tcs.demo.recipe.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.Principal;
 import java.util.Base64;
@@ -36,7 +35,7 @@ public class MvcController {
 	UserService userService;
 
 	@GetMapping({"/","/home"})
-	public ModelAndView  returnHomePage(Principal user,HttpServletResponse response) throws UnsupportedEncodingException, GeneralSecurityException{
+	public ModelAndView  returnHomePage(Principal user,HttpServletResponse response) throws GeneralSecurityException{
 
 		User sessionUser = userService.getUserByLoginId(user.getName());	
 		response.addCookie(new Cookie("ed", sessionUser.getUsrId().toString()));
