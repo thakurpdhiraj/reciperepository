@@ -38,53 +38,53 @@ public class Recipe implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	 @ApiModelProperty(value = "The database generated recipe ID")
+	@ApiModelProperty(value = "The database generated recipe ID")
 	@Id()
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="rcpid",updatable=false,nullable=false)
 	private Long rcpId;
 
-	 @ApiModelProperty(value = "The recipe name" , required=true)
+	@ApiModelProperty(value = "The recipe name" , required=true)
 	@NotNull
 	@Column(name="rcpname")
 	private String rcpName;
 
-	 @ApiModelProperty(value = "The recipe ingredient description")
+	@ApiModelProperty(value = "The recipe ingredient description")
 	@Lob
 	@Column(name="rcpingredientdescription")
 	private String rcpIngredientDescription;
 
-	 @ApiModelProperty(value = "The recipe cooking instruction")
+	@ApiModelProperty(value = "The recipe cooking instruction")
 	@Lob
 	@Column(name="rcpcookinginstruction")
 	private String rcpCookingInstruction;
 
-	 @ApiModelProperty(value = "The recipe image path")
+	@ApiModelProperty(value = "The recipe image path")
 	@Column(name="rcpimagepath")
 	private String rcpImagePath;
 
-	 @ApiModelProperty(value = "Is the recipe venetarian")
+	@ApiModelProperty(value = "Is the recipe venetarian")
 	@Column(name="rcpisvegetarian")
 	private Boolean rcpIsVegetarian ;
 
-	 @ApiModelProperty(value = "The database generated product ID",allowableValues="LESSTHANFIVE,FIVETOTEN,MORETHANTEN")
+	@ApiModelProperty(value = "The database generated product ID",allowableValues="LESSTHANFIVE,FIVETOTEN,MORETHANTEN")
 	@Column(name="rcpsuitablefor")
 	private PeopleGroup rcpSuitableFor; //PeopleGroupAttributeConverter implemented with  autoApply=true
 
-	 @ApiModelProperty(value = "The user who created the recipe")
+	@ApiModelProperty(value = "The user who created the recipe")
 	@Column(name="rcpcreatedby", updatable=false)
 	private Long rcpCreatedBy;
 
-	 @ApiModelProperty(value = "Time at which recipe was created",readOnly=true)
+	@ApiModelProperty(value = "Time at which recipe was created",readOnly=true)
 	@Column(name="rcpcreatedat", updatable=false)
 	@JsonFormat(pattern="dd-MM-yyyy HH:mm")
 	@CreationTimestamp
 	private LocalDateTime rcpCreatedAt; //LocalDateTimeAttributeConverter implemented with autoApply = true
 
-	 @ApiModelProperty(value = "The user who updated the recipe")
+	@ApiModelProperty(value = "The user who updated the recipe")
 	@Column(name = "rcpupdatedby")
 	private Long rcpUpdatedBy;
-	
+
 	@ApiModelProperty(value = "Time at which recipe was updated",readOnly=true)
 	@Column(name="rcpupdatedat")
 	@JsonFormat(pattern="dd-MM-yyyy HH:mm")
@@ -333,59 +333,59 @@ public class Recipe implements Serializable{
 			if (other.rcpCookingInstruction != null)
 				return false;
 		} else if (!rcpCookingInstruction.equals(other.rcpCookingInstruction))
-			return false;
+					return false;
 		if (rcpCreatedAt == null) {
 			if (other.rcpCreatedAt != null)
 				return false;
 		} else if (!rcpCreatedAt.equals(other.rcpCreatedAt))
-			return false;
+					return false;
 		if (rcpCreatedBy == null) {
 			if (other.rcpCreatedBy != null)
 				return false;
 		} else if (!rcpCreatedBy.equals(other.rcpCreatedBy))
-			return false;
+					return false;
 		if (rcpId == null) {
 			if (other.rcpId != null)
 				return false;
 		} else if (!rcpId.equals(other.rcpId))
-			return false;
+					return false;
 		if (rcpImagePath == null) {
 			if (other.rcpImagePath != null)
 				return false;
 		} else if (!rcpImagePath.equals(other.rcpImagePath))
-			return false;
+					return false;
 		if (rcpIngredientDescription == null) {
 			if (other.rcpIngredientDescription != null)
 				return false;
 		} else if (!rcpIngredientDescription.equals(other.rcpIngredientDescription))
-			return false;
+					return false;
 		if (rcpIsVegetarian == null) {
 			if (other.rcpIsVegetarian != null)
 				return false;
 		} else if (!rcpIsVegetarian.equals(other.rcpIsVegetarian))
-			return false;
+					return false;
 		if (rcpName == null) {
 			if (other.rcpName != null)
 				return false;
 		} else if (!rcpName.equals(other.rcpName))
-			return false;
+					return false;
 		if (rcpRowState == null) {
 			if (other.rcpRowState != null)
 				return false;
 		} else if (!rcpRowState.equals(other.rcpRowState))
-			return false;
+					return false;
 		if (rcpSuitableFor != other.rcpSuitableFor)
 			return false;
 		if (rcpUpdatedAt == null) {
 			if (other.rcpUpdatedAt != null)
 				return false;
 		} else if (!rcpUpdatedAt.equals(other.rcpUpdatedAt))
-			return false;
+					return false;
 		if (rcpUpdatedBy == null) {
 			if (other.rcpUpdatedBy != null)
 				return false;
 		} else if (!rcpUpdatedBy.equals(other.rcpUpdatedBy))
-			return false;
+					return false;
 		return true;
 	}
 

@@ -124,7 +124,7 @@ function buildPagination(){
 		return;
 
 	size = Math.ceil(size/6);  //6 default grid items in one page
-	for(i=0;i<size;i++){
+	for(var i=0;i<size;i++){
 		if(i==0)
 			$('#pagination_id').append('<li class="active" id=page'+i+'><a onclick="showPage('+i+')">'+(i+1)+'</a></li>');
 		else

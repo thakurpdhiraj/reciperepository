@@ -138,19 +138,19 @@ public class ApiError implements Serializable {
 			if (other.debugMessage != null)
 				return false;
 		} else if (!debugMessage.equals(other.debugMessage))
-			return false;
+					return false;
 		if (message == null) {
 			if (other.message != null)
 				return false;
 		} else if (!message.equals(other.message))
-			return false;
+					return false;
 		if (status != other.status)
 			return false;
 		if (timestamp == null) {
 			if (other.timestamp != null)
 				return false;
 		} else if (!timestamp.equals(other.timestamp))
-			return false;
+					return false;
 		return true;
 	}
 	

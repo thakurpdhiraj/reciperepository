@@ -232,7 +232,7 @@ public class RecipeController {
 	 */
 	@ApiOperation(value = "Update a recipe by id along with updating the recipe  image",response = ResponseEntity.class)
 	@PutMapping(value="{id}", consumes=MediaType.MULTIPART_FORM_DATA_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> updateRecipe(@PathVariable("id") Long id, @Valid @RequestPart Recipe recipe, @RequestPart("recipeImgFile") MultipartFile uploadFile, Principal principal){
+	public ResponseEntity<Object> updateRecipe(@PathVariable("id") Long id, @Valid @RequestPart Recipe recipe, @RequestPart("recipeImgFile") MultipartFile uploadFile, Principal principal){
 
 		recipe.setRcpId(id);
 		if(recipe.getRcpUpdatedBy()==null || recipe.getRcpUpdatedBy() == 0) {

@@ -173,32 +173,32 @@ public class User implements Serializable{
 			if (other.usrId != null)
 				return false;
 		} else if (!usrId.equals(other.usrId))
-			return false;
+					return false;
 		if (usrIsAdmin == null) {
 			if (other.usrIsAdmin != null)
 				return false;
 		} else if (!usrIsAdmin.equals(other.usrIsAdmin))
-			return false;
+					return false;
 		if (usrLoginId == null) {
 			if (other.usrLoginId != null)
 				return false;
 		} else if (!usrLoginId.equals(other.usrLoginId))
-			return false;
+					return false;
 		if (usrName == null) {
 			if (other.usrName != null)
 				return false;
 		} else if (!usrName.equals(other.usrName))
-			return false;
+					return false;
 		if (usrPassword == null) {
 			if (other.usrPassword != null)
 				return false;
 		} else if (!usrPassword.equals(other.usrPassword))
-			return false;
+					return false;
 		if (usrRowState == null) {
 			if (other.usrRowState != null)
 				return false;
 		} else if (!usrRowState.equals(other.usrRowState))
-			return false;
+					return false;
 		return true;
 	}
 	/* (non-Javadoc)

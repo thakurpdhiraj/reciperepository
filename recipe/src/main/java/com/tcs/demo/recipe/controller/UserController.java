@@ -40,7 +40,7 @@ import com.tcs.demo.recipe.service.UserService;
 @RequestMapping("api/users")
 public class UserController {
 
-	private final static Logger LOGGER = LogManager.getLogger(UserController.class);
+	private static final  Logger LOGGER = LogManager.getLogger(UserController.class);
 
 	@Autowired
 	UserService userService;
@@ -86,7 +86,7 @@ public class UserController {
 	 * @throws UnsupportedEncodingException 
 	 */
 	@PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,  produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<User> addUser(@Valid @RequestBody User user) throws UnsupportedEncodingException, GeneralSecurityException {
+	public ResponseEntity<User> addUser(@Valid @RequestBody User user){
 		user = userService.addNewUser(user);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 		.buildAndExpand(user.getUsrId()).toUri();

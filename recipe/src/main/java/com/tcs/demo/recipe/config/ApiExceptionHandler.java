@@ -95,7 +95,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
 		ex.getBindingResult().getFieldErrors().forEach(fe ->  list.add(fe.getField()+" "+fe.getDefaultMessage()));
 
-		return	buildErrorResponse(new ApiError(HttpStatus.BAD_REQUEST, "Bad Request", list));
+		return	buildErrorResponse(new ApiError(HttpStatus.BAD_REQUEST, "Method Argument NotValid", list));
 	}
 
 
@@ -151,7 +151,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
 		List<String>list = new ArrayList<>();
 		list.add(ex.getLocalizedMessage());
-		return	buildErrorResponse(new ApiError(HttpStatus.BAD_REQUEST, "Bad Request", list));
+		return	buildErrorResponse(new ApiError(HttpStatus.BAD_REQUEST, "Multi Part Exception", list));
 
 	}
 
