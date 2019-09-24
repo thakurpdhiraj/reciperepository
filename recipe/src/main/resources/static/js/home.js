@@ -6,11 +6,11 @@ var basicCoo =  getCookie('ba');//basic auth cookie
 
 $(document).ready(function(){
 	refreshPaginationAndImageGrid();
-	
+
 	//display object's name,cooking instruction, ingredient  matches to search input using jquery grep
 	$("#searchinput").keyup(function(){
 		var searchInput = $("#searchinput").val();
-		
+
 		var returnedData = $.grep(globalRecipeArray, function (element, index) {
 			if(searchInput==""){
 				return true;
@@ -19,7 +19,7 @@ $(document).ready(function(){
 					return true;
 				}
 			}
-			
+
 		});
 		refreshAndBuildImageGrid(returnedData);
 	});
@@ -52,12 +52,12 @@ function getRecipeArray(pageId,limit){
 		},
 		error : function(xhr, textStatus, errorThrown){
 			if(xhr.status == 404){
-				alert('No recipes found');
+				showAlertModal('No recipes found');
 				globalRecipeArray = {};
 			}else  if(xhr.status == 401 || xhr.status == 403){
-				alert('Unauthorized to access resource');
+				showAlertModal('Unauthorized to access resource');
 			}else{
-				alert('Error fetching recipes');
+				showAlertModal('Error fetching recipes');
 			}
 
 		},
@@ -153,7 +153,7 @@ function showPage(pageId){
 			return true;
 		}
 	});*/
-	
+
 	getRecipeArray(globalPageNumber,globalPageLimit);
 
 	refreshAndBuildImageGrid(globalRecipeArray);
@@ -166,32 +166,31 @@ function showPage(pageId){
  */
 function deleteRecipe(id,event){
 	event.stopPropagation();
-	editor = getCookie("ed"); //editor value  would be set in the cookie when loading home.htm from the mvccontroller
-	if (confirm('Are you sure you want to delete this item ?')) {
+	var editor = getCookie("ed"); //editor value  would be set in the cookie when loading home.htm from the mvccontroller
 
-		$.ajax({
-			url: 'api/recipes/'+id+'?editor='+editor,
-			type: 'DELETE',
-			async: false,
-			headers: {
-				"Authorization": "Basic " + basicCoo
-			},
-			success : function(){
-				alert( "Recipe "+id+" successfully deleted" );
-				refreshPaginationAndImageGrid();
-			},
-			error : function(xhr, textStatus, errorThrown){
-				if(xhr.status == 404){
-					alert('No recipes found with id');
-				}else  if(xhr.status == 401 || xhr.status == 403){
-					alert('No permission to delete resource');
-				}else{
-					alert('Error in deleting the resource');
-				}
-
+	$.ajax({
+		url: 'api/recipes/'+id+'?editor='+editor,
+		type: 'DELETE',
+		async: false,
+		headers: {
+			"Authorization": "Basic " + basicCoo
+		},
+		success : function(){
+			showAlertModal( "Recipe "+id+" successfully deleted" );
+			refreshPaginationAndImageGrid();
+		},
+		error : function(xhr, textStatus, errorThrown){
+			if(xhr.status == 404){
+				showAlertModal('No recipes found with id');
+			}else  if(xhr.status == 401 || xhr.status == 403){
+				showAlertModal('No permission to delete resource');
+			}else{
+				showAlertModal('Error in deleting the resource');
 			}
-		});
-	}
+
+		}
+	});
+
 }
 
 /**
@@ -238,17 +237,17 @@ function displayRecipeModal(recipeId){
 		}, 
 		error : function(xhr, textStatus, errorThrown){
 			if(xhr.status == 404){
-				alert('No recipes found with id');
+				showAlertModal('No recipes found with id');
 			}else  if(xhr.status == 401 || xhr.status == 403){
-				alert('No permission to view resource');
+				showAlertModal('No permission to view resource');
 			}else{
-				alert('Error fetching the resource');
+				showAlertModal('Error fetching the resource');
 			}			
 		}
 	});	
 
 
-	mod = $("#recipeModal");
+	var mod = $("#recipeModal");
 	refreshModal(mod);
 
 	//show the modal 
@@ -304,22 +303,22 @@ function displayRecipeModal(recipeId){
 			contentType: false,
 			cache: false,
 			success: function (data) {
-				alert('Recipe updated successfully');
+				showAlertModal('Recipe updated successfully');
 				refreshPaginationAndImageGrid();
 			},
 			error : function(xhr, textStatus, errorThrown){
 				if(xhr.status == 404){
-					alert('No recipes found with id');
+					showAlertModal('No recipes found with id');
 				}else  if(xhr.status == 401 || xhr.status == 403){
-					alert('No permission to update resource');
+					showAlertModal('No permission to update resource');
 				}else{
-					alert('Error updating the resource '+errorThrown);
+					showAlertModal('Error updating the resource '+errorThrown);
 				}	
 			}
 		});
 
 	});			
-	
+
 	//delete button inside modal
 	mod.find('#recipe-delete-button').unbind(); 
 	mod.find('#recipe-delete-button').on('click', function(event){
@@ -335,7 +334,7 @@ function displayRecipeModalForCreate(){
 
 
 	//show the modal 
-	mod = $("#recipeModal");
+	var mod = $("#recipeModal");
 	refreshModal(mod);
 	mod.modal("show");
 	//change value of edit to save
@@ -368,18 +367,18 @@ function displayRecipeModalForCreate(){
 		mod.find('#recipe-mandatory-label').hide();
 		mod.find('#recipe-img').show();
 		mod.find('#recipe-delete-button').show();
-		
+
 		refreshModal(mod);
 
 	});
 
-	
+
 	//Save button functionality
 	mod.find('#recipe-edit-button').unbind(); //unbind the previously attached onclick. Caused button trigger to happen as many times as new  modals were opened.
 	mod.find('#recipe-edit-button').on('click', function(){
 		//validations
 		if($('#recipe-img-input').get(0).files.length == 0 || $('#recipe-name').val() == "" || $('#recipe-description').val() == ""  || $('#recipe-ingredient').val() == "" ){
-			alert('Kindly fill all fields');
+			showAlertModal('Kindly fill all fields');
 			return;
 		}
 		var recipeObj = new Object();
@@ -408,19 +407,19 @@ function displayRecipeModalForCreate(){
 			contentType: false,
 			cache: false,
 			success: function (data) {
-				alert('Recipe saved  successfully');
+				showAlertModal('Recipe saved  successfully');
 				refreshPaginationAndImageGrid();
 			},
 			error : function(xhr, textStatus, errorThrown){
 				if(xhr.status == 401 || xhr.status == 403){
-					alert('No permission to add resource');
+					showAlertModal('No permission to add resource');
 				}else{
-					alert('Error saving resource '+errorThrown);
+					showAlertModal('Error saving resource '+errorThrown);
 				}	
 			}
 		});
 	});
-	
+
 }
 
 /**
@@ -438,4 +437,16 @@ function refreshModal(mod){
 	mod.find('#recipe-updatedat').text("-");
 	mod.find('#recipe-img').attr("src","");
 	mod.find('#recipe-img-input').val("");
+}
+
+
+function showAlertModal(message){
+	var mod = $('#alertModal');
+	mod.modal('show');
+
+	mod.find('#alertMessage').text(message);
+
+	mod.on('hidden.bs.modal', function () {
+		mod.find('#alertMessage').text('');
+	});
 }
