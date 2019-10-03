@@ -34,7 +34,7 @@ public class FileUploadUtil {
 		byte[] bytes  = file.getBytes();
 		Path path = Paths.get(FOLDER_TO_UPLOAD ,"recipeImages", file.getOriginalFilename());
 
-		LOGGER.info("Attempting to save file "+file.getOriginalFilename()+" to "+path.getParent());
+		LOGGER.info("Attempting to save file {} to {} ",file.getOriginalFilename(),path.getParent());
 
 		if (!path.getParent().toFile().exists()) //create directory if it does not exist. Mostly during first time upload
 			Files.createDirectories(path.getParent());

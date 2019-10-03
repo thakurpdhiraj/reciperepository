@@ -29,7 +29,7 @@ public class SecurityUserDetailService implements UserDetailsService{
 		}
 		
 		 List<GrantedAuthority> grantList = new ArrayList<>();
-		 if(user.getUsrIsAdmin()) {
+		 if(Boolean.TRUE.equals(user.getUsrIsAdmin())) {
 			 GrantedAuthority adminAuthority= new SimpleGrantedAuthority("ROLE_ADMIN");
 			 GrantedAuthority userAuthority= new SimpleGrantedAuthority("ROLE_USER");
 			 grantList.add(adminAuthority);

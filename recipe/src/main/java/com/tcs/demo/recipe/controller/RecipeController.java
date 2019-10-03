@@ -138,11 +138,11 @@ public class RecipeController {
 			try {
 
 				path = FileUploadUtil.uploadFile(uploadFile);
-				LOGGER.info("File uploaded successfully to path "+path);
+				LOGGER.info("File uploaded successfully to path {}",path);
 				recipe.setRcpImagePath(path);
 
 			} catch (IOException ex) {
-				LOGGER.error("File upload failed  to path "+path , ex);
+				LOGGER.error("File upload failed  to path {}",path , ex);
 				List<String>list = new ArrayList<>();
 				list.add(ex.getLocalizedMessage());
 				return new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ", list),HttpStatus.BAD_REQUEST);
@@ -154,7 +154,7 @@ public class RecipeController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(recipe.getRcpId()).toUri();
 
-		LOGGER.info("Created Recipe "+recipe.toString()+" with location "+uri.toString());
+		LOGGER.info("Created Recipe {} with location {}",recipe,uri);
 
 		return  ResponseEntity.created(uri).body(recipe); 
 	}
@@ -173,7 +173,7 @@ public class RecipeController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(recipe.getRcpId()).toUri();
 
-		LOGGER.info("Created Recipe "+recipe.toString()+" with location "+uri.toString());
+		LOGGER.info("Created Recipe {} with location {}",recipe,uri);
 
 		return  ResponseEntity.created(uri).body(recipe); 
 	}
@@ -244,7 +244,7 @@ public class RecipeController {
 			try {
 
 				path = FileUploadUtil.uploadFile(uploadFile);
-				LOGGER.info("File uploaded successfully to path "+path);
+				LOGGER.info("File uploaded successfully to path {}",path);
 				recipe.setRcpImagePath(path);
 			} catch (IOException ex) {
 				LOGGER.error("Error saving image ",ex);

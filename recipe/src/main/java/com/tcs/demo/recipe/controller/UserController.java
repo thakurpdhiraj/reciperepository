@@ -91,7 +91,7 @@ public class UserController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 		.buildAndExpand(user.getUsrId()).toUri();
 		
-		LOGGER.info("Created User "+user.toString()+" with location "+uri.toString());
+		LOGGER.info("Created User {} with location {}",user,uri);
 		
 		return  ResponseEntity.created(uri).body(user); //set the Location header to newly created resource with 201 created status
 	

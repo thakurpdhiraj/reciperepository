@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.tcs.demo.recipe.bean.Recipe;
-import com.tcs.demo.recipe.builder.RecipeBuilder;
 import com.tcs.demo.recipe.repository.RecipeRespository;
 import com.tcs.demo.recipe.service.RecipeService;
 import com.tcs.demo.recipe.service.RecipeServiceImpl;
@@ -41,8 +40,8 @@ public class RecipeServiceTest {
 	
 	@Test
 	public void testAddRecipe() throws Exception{
-		Recipe recipe = new RecipeBuilder().withId(1L)
-				.withName("Recipe 1")
+		Recipe recipe = Recipe.builder().rcpId(1L)
+				.rcpName("Recipe 1")
 				.build();
 		
 		when(recipeRepository.saveAndFlush(recipe)).thenReturn(recipe);
@@ -55,15 +54,15 @@ public class RecipeServiceTest {
 	
 	@Test
 	public void testDeleteRecipe() throws Exception{
-		Recipe recipe = new RecipeBuilder().withId(1L)
-				.withName("Recipe 1")
-				.withRowState(1)
-				.withUpdatedBy(2L)
+		Recipe recipe = Recipe.builder().rcpId(1L)
+				.rcpName("Recipe 1")
+				.rcpRowState(1)
+				.rcpUpdatedBy(2L)
 				.build();
-		Recipe deletedRecipe = new RecipeBuilder().withId(1L)
-				.withName("Recipe 1")
-				.withRowState(-1)
-				.withUpdatedBy(1L)
+		Recipe deletedRecipe = Recipe.builder().rcpId(1L)
+				.rcpName("Recipe 1")
+				.rcpRowState(-1)
+				.rcpUpdatedBy(1L)
 				.build();
 		
 		when(recipeRepository.findByRcpIdAndRcpRowState(1L, 1)).thenReturn(recipe);		
@@ -77,8 +76,8 @@ public class RecipeServiceTest {
 	
 	@Test
 	public void testUpdateRecipe() throws Exception{
-		Recipe recipe = new RecipeBuilder().withId(1L)
-				.withName("Recipe 1")
+		Recipe recipe = Recipe.builder().rcpId(1L)
+				.rcpName("Recipe 1")
 				.build();
 		
 		when(recipeRepository.findByRcpIdAndRcpRowState(1L, 1)).thenReturn(recipe);
@@ -92,10 +91,10 @@ public class RecipeServiceTest {
 
 	@Test
 	public void testGetRecipeById() throws Exception {
-		Recipe recipe = new RecipeBuilder().withId(1L)
-				.withName("Caponata Pasta")
-				.withIngredientDescription("olive oil,onion,tomatoes,small capers,raisins,rigatoni")
-				.withImagePath("image/caponata-pasta.jpg")
+		Recipe recipe = Recipe.builder().rcpId(1L)
+				.rcpName("Caponata Pasta")
+				.rcpIngredientDescription("olive oil,onion,tomatoes,small capers,raisins,rigatoni")
+				.rcpImagePath("image/caponata-pasta.jpg")
 				.build();
 		
 		when(recipeRepository.findByRcpIdAndRcpRowState(1L,1)).thenReturn(recipe);
@@ -108,14 +107,14 @@ public class RecipeServiceTest {
 
 	@Test
 	public void testGetAllRecipe() throws Exception{
-		Recipe recipe = new RecipeBuilder().withId(1L)
-				.withName("Recipe 1")
+		Recipe recipe = Recipe.builder().rcpId(1L)
+				.rcpName("Recipe 1")
 				.build();
-		Recipe recipe1 = new RecipeBuilder().withId(1L)
-				.withName("Recipe 2")
+		Recipe recipe1 = Recipe.builder().rcpId(1L)
+				.rcpName("Recipe 2")
 				.build();
-		Recipe recipe2 = new RecipeBuilder().withId(1L)
-				.withName("Recipe 3")
+		Recipe recipe2 = Recipe.builder().rcpId(1L)
+				.rcpName("Recipe 3")
 				.build();
 
 		List<Recipe> recipeList = Stream.of(recipe,recipe1,recipe2).collect(Collectors.toList());
@@ -128,14 +127,14 @@ public class RecipeServiceTest {
 
 	@Test
 	public void testGetAllRecipeByLimitAndPage() throws Exception{
-		Recipe recipe = new RecipeBuilder().withId(1L)
-				.withName("Recipe 1")
+		Recipe recipe = Recipe.builder().rcpId(1L)
+				.rcpName("Recipe 1")
 				.build();
-		Recipe recipe1 = new RecipeBuilder().withId(1L)
-				.withName("Recipe 2")
+		Recipe recipe1 = Recipe.builder().rcpId(1L)
+				.rcpName("Recipe 2")
 				.build();
-		Recipe recipe2 = new RecipeBuilder().withId(1L)
-				.withName("Recipe 3")
+		Recipe recipe2 = Recipe.builder().rcpId(1L)
+				.rcpName("Recipe 3")
 				.build();
 		
 		Pageable pageable = PageRequest.of(0, 3);

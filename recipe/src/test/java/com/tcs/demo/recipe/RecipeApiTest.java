@@ -25,7 +25,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.tcs.demo.recipe.RecipeApplication;
 import com.tcs.demo.recipe.bean.Recipe;
 import com.tcs.demo.recipe.bean.Recipe.PeopleGroup;
-import com.tcs.demo.recipe.builder.RecipeBuilder;
 import com.tcs.demo.recipe.service.RecipeService;
 /**
  * Unit test cases for Recipe Api
@@ -77,14 +76,14 @@ public class RecipeApiTest {
 	@Test
 	public void testForAddRecipe() throws Exception {
 		
-		Recipe recipe = new RecipeBuilder().withName("test-recipe")
-				.withCookingInstruction("test - instructions")
-				.withIngredientDescription("test-ingrediens")
-				.withImagePath("image/caponata-pasta.jpg")
-				.withCreatedAt( LocalDateTime.now())
-				.withCreatedBy(1L)
-				.withSuitableFor(PeopleGroup.FIVETOTEN)
-				.withIsVegetarian(true)
+		Recipe recipe = Recipe.builder().rcpName("test-recipe")
+				.rcpCookingInstruction("test - instructions")
+				.rcpIngredientDescription("test-ingrediens")
+				.rcpImagePath("image/caponata-pasta.jpg")
+				.rcpCreatedAt( LocalDateTime.now())
+				.rcpCreatedBy(1L)
+				.rcpSuitableFor(PeopleGroup.FIVETOTEN)
+				.rcpIsVegetarian(true)
 				.build();
 		
 		RequestEntity<Recipe> requestEntity = RequestEntity
@@ -99,11 +98,11 @@ public class RecipeApiTest {
 	
 	@Test
 	public void testForUpdateRecipe() throws Exception{
-		Recipe recipe = new RecipeBuilder().withId(2L)
-				.withName("Updated Coconut dhansak")
-				.withUpdatedBy(2L)
-				.withSuitableFor(PeopleGroup.MORETHANTEN)
-				.withIsVegetarian(false)
+		Recipe recipe = Recipe.builder().rcpId(2L)
+				.rcpName("Updated Coconut dhansak")
+				.rcpUpdatedBy(2L)
+				.rcpSuitableFor(PeopleGroup.MORETHANTEN)
+				.rcpIsVegetarian(false)
 				.build();
 		
 		RequestEntity<Recipe> requestEntity = RequestEntity
@@ -142,10 +141,10 @@ public class RecipeApiTest {
 	
 	@Test
 	public void testForUpdateWithoutRecipeName() throws Exception{
-		Recipe recipe = new RecipeBuilder().withId(2L)
-				.withUpdatedBy(2L)
-				.withSuitableFor(PeopleGroup.MORETHANTEN)
-				.withIsVegetarian(false)
+		Recipe recipe = Recipe.builder().rcpId(2L)
+				.rcpUpdatedBy(2L)
+				.rcpSuitableFor(PeopleGroup.MORETHANTEN)
+				.rcpIsVegetarian(false)
 				.build();
 		
 		RequestEntity<Recipe> requestEntity = RequestEntity
@@ -168,14 +167,14 @@ public class RecipeApiTest {
 	
 	@Test
 	public void testForPostWithoutAuthorization() throws Exception{
-		Recipe recipe = new RecipeBuilder().withName("test-recipe")
-				.withCookingInstruction("test - instructions")
-				.withIngredientDescription("test-ingrediens")
-				.withImagePath("image/caponata-pasta.jpg")
-				.withCreatedAt( LocalDateTime.now())
-				.withCreatedBy(1L)
-				.withSuitableFor(PeopleGroup.FIVETOTEN)
-				.withIsVegetarian(true)
+		Recipe recipe = Recipe.builder().rcpName("test-recipe")
+				.rcpCookingInstruction("test - instructions")
+				.rcpIngredientDescription("test-ingrediens")
+				.rcpImagePath("image/caponata-pasta.jpg")
+				.rcpCreatedAt( LocalDateTime.now())
+				.rcpCreatedBy(1L)
+				.rcpSuitableFor(PeopleGroup.FIVETOTEN)
+				.rcpIsVegetarian(true)
 				.build();
 		
 		RequestEntity<Recipe> requestEntity = RequestEntity
@@ -190,10 +189,10 @@ public class RecipeApiTest {
 	
 	@Test
 	public void testForPutWithoutAuthorization() throws Exception{
-		Recipe recipe = new RecipeBuilder().withId(2L)
-				.withUpdatedBy(2L)
-				.withSuitableFor(PeopleGroup.MORETHANTEN)
-				.withIsVegetarian(false)
+		Recipe recipe = Recipe.builder().rcpId(2L)
+				.rcpUpdatedBy(2L)
+				.rcpSuitableFor(PeopleGroup.MORETHANTEN)
+				.rcpIsVegetarian(false)
 				.build();
 		
 		RequestEntity<Recipe> requestEntity = RequestEntity
@@ -217,14 +216,14 @@ public class RecipeApiTest {
 	//authorization tests
 	@Test
 	public void testForPostWithoutAdminRights() throws Exception{
-		Recipe recipe = new RecipeBuilder().withName("test-recipe")
-				.withCookingInstruction("test - instructions")
-				.withIngredientDescription("test-ingrediens")
-				.withImagePath("image/caponata-pasta.jpg")
-				.withCreatedAt( LocalDateTime.now())
-				.withCreatedBy(1L)
-				.withSuitableFor(PeopleGroup.FIVETOTEN)
-				.withIsVegetarian(true)
+		Recipe recipe = Recipe.builder().rcpName("test-recipe")
+				.rcpCookingInstruction("test - instructions")
+				.rcpIngredientDescription("test-ingrediens")
+				.rcpImagePath("image/caponata-pasta.jpg")
+				.rcpCreatedAt( LocalDateTime.now())
+				.rcpCreatedBy(1L)
+				.rcpSuitableFor(PeopleGroup.FIVETOTEN)
+				.rcpIsVegetarian(true)
 				.build();
 		
 		RequestEntity<Recipe> requestEntity = RequestEntity
@@ -247,10 +246,10 @@ public class RecipeApiTest {
 	}
 	@Test
 	public void testForPutWithoutAdminRights() throws Exception{
-		Recipe recipe = new RecipeBuilder().withId(2L)
-				.withUpdatedBy(2L)
-				.withSuitableFor(PeopleGroup.MORETHANTEN)
-				.withIsVegetarian(false)
+		Recipe recipe = Recipe.builder().rcpId(2L)
+				.rcpUpdatedBy(2L)
+				.rcpSuitableFor(PeopleGroup.MORETHANTEN)
+				.rcpIsVegetarian(false)
 				.build();
 		
 		RequestEntity<Recipe> requestEntity = RequestEntity
