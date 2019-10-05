@@ -1,6 +1,6 @@
 
 var globalRecipeArray ; //global arr for access in search  and pagination operation;
-var globalPageNumber = 0 ;  // global var to keep track of page number 
+var globalPageNumber = 0 ;  // global var to keep track of page number
 var globalPageLimit = 6; //global var to limit the no of recipe per page
 var basicCoo =  getCookie('ba');//basic auth cookie
 
@@ -68,7 +68,7 @@ function getRecipeArray(pageId,limit){
 	});
 
 
-	/*$.getJSON( "api/recipes", 
+	/*$.getJSON( "api/recipes",
 			function( recipeArr ) {
 				data = recipeArr;
 				console.log('Total  recipe objects'+recipeArr.length);
@@ -105,7 +105,7 @@ function refreshAndBuildImageGrid(recipeArr){
 function buildPagination(){
 	$('#pagination_id').empty();
 
-	var size = 0; 
+	var size = 0;
 	$.ajax({
 		type: 'GET',
 		url: 'api/recipes/size',
@@ -118,7 +118,7 @@ function buildPagination(){
 		headers: {
 			"Authorization": "Basic " + basicCoo
 		},
-		async: false 
+		async: false
 	});
 	if(size == 0)
 		return;
@@ -142,7 +142,7 @@ function showPage(pageId){
 	$("#page"+pageId).addClass("active");
 
 	/*
-	 //handle pagination 
+	 //handle pagination
 	 var low, high;
 	//for page 1 elements 0 ---> 5 should be visible, for page 2 elements 6 --> 11 should be visible and so on... (6 elements per page)
 	low = pageId*6-6;
@@ -194,6 +194,15 @@ function deleteRecipe(id,event){
 }
 
 /**
+* Download pdf
+*/
+function downloadRecipePDF(id,event){
+    event.stopPropagation();
+    var iframe = document.getElementById("downloadFrame");
+    iframe .src = "api/recipes/download/pdf/"+id;
+}
+
+/**
  * Get cookie Value based on name passed
  * @param cname
  * @returns
@@ -234,7 +243,7 @@ function displayRecipeModal(recipeId){
 		},
 		success : function(data){
 			recipeObj = data;
-		}, 
+		},
 		error : function(xhr, textStatus, errorThrown){
 			if(xhr.status == 404){
 				showAlertModal('No recipes found with id');
@@ -242,15 +251,15 @@ function displayRecipeModal(recipeId){
 				showAlertModal('No permission to view resource');
 			}else{
 				showAlertModal('Error fetching the resource');
-			}			
+			}
 		}
-	});	
+	});
 
 
 	var mod = $("#recipeModal");
 	refreshModal(mod);
 
-	//show the modal 
+	//show the modal
 	mod.modal("show");
 
 
@@ -299,7 +308,7 @@ function displayRecipeModal(recipeId){
 				"Authorization": "Basic " + basicCoo
 			},
 			data: formData,
-			processData: false, 
+			processData: false,
 			contentType: false,
 			cache: false,
 			success: function (data) {
@@ -313,17 +322,26 @@ function displayRecipeModal(recipeId){
 					showAlertModal('No permission to update resource');
 				}else{
 					showAlertModal('Error updating the resource '+errorThrown);
-				}	
+				}
 			}
 		});
 
-	});			
+	});
 
 	//delete button inside modal
-	mod.find('#recipe-delete-button').unbind(); 
+	mod.find('#recipe-delete-button').unbind();
 	mod.find('#recipe-delete-button').on('click', function(event){
 		deleteRecipe(recipeId,event);
 	});
+
+	//download button inside modal
+	mod.find('#recipe-download-button').unbind();
+	mod.find('#recipe-download-button').on('click', function(event){
+    		downloadRecipePDF(recipeId,event);
+    	});
+
+
+
 }
 
 /**
@@ -333,7 +351,7 @@ function displayRecipeModal(recipeId){
 function displayRecipeModalForCreate(){
 
 
-	//show the modal 
+	//show the modal
 	var mod = $("#recipeModal");
 	refreshModal(mod);
 	mod.modal("show");
@@ -387,7 +405,7 @@ function displayRecipeModalForCreate(){
 		recipeObj.rcpIngredientDescription = $('#recipe-ingredient').val();
 		recipeObj.rcpIsVegetarian = $('#recipe-isveg').val() == "true" ;
 		recipeObj.rcpSuitableFor = $('#recipe-suitablefor').val();
-		recipeObj.rcpCreatedBy = getCookie("ed"); 
+		recipeObj.rcpCreatedBy = getCookie("ed");
 
 		var formData = new FormData($("#recipe-image-upload-form")[0]);
 		formData.append('recipe', new Blob([JSON.stringify(recipeObj)], {
@@ -403,7 +421,7 @@ function displayRecipeModalForCreate(){
 				"Authorization": "Basic " + basicCoo
 			},
 			data: formData,
-			processData: false, 
+			processData: false,
 			contentType: false,
 			cache: false,
 			success: function (data) {
@@ -415,7 +433,7 @@ function displayRecipeModalForCreate(){
 					showAlertModal('No permission to add resource');
 				}else{
 					showAlertModal('Error saving resource '+errorThrown);
-				}	
+				}
 			}
 		});
 	});

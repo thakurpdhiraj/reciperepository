@@ -3,6 +3,8 @@
  */
 package com.tcs.demo.recipe.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
@@ -14,7 +16,10 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +75,8 @@ public class RecipeController {
 	 */
 	@ApiOperation(value = "View a list of available recipes",response = ResponseEntity.class)
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Recipe>> getAllRecipe(@RequestParam(value ="limit",required=false) Integer limit,@RequestParam(required=false,value="page") Integer page) {
+	public ResponseEntity<List<Recipe>> getAllRecipe(@RequestParam(value ="limit",required=false) Integer limit,
+													 @RequestParam(required=false,value="page") Integer page) {
 		List<Recipe> recipeList = new ArrayList<>();
 		if(limit==null && page==null) {
 			recipeList = recipeService.getAllRecipes();
@@ -134,7 +140,8 @@ public class RecipeController {
 	 */
 	@ApiOperation(value = "Add a new recipe along with an image",response = ResponseEntity.class)
 	@PostMapping(consumes=MediaType.MULTIPART_FORM_DATA_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Object> saveRecipeWithMultiPart(@Valid @RequestPart Recipe recipe , @RequestPart("recipeImgFile") MultipartFile uploadFile){
+	public ResponseEntity<Object> saveRecipeWithMultiPart(@Valid @RequestPart Recipe recipe ,
+														  @RequestPart("recipeImgFile") MultipartFile uploadFile){
 
 		if(!uploadFile.isEmpty()) {
 			String path = "";
@@ -148,7 +155,8 @@ public class RecipeController {
 				LOGGER.error("File upload failed  to path {}",path , ex);
 				List<String>list = new ArrayList<>();
 				list.add(ex.getLocalizedMessage());
-				return new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ", list),HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: "
+						, list),HttpStatus.BAD_REQUEST);
 			}
 
 		}
@@ -200,7 +208,8 @@ public class RecipeController {
 	}
 
 	/**
-	 * Update a recipe with Recipe object and set the updatedby property to {principal/loggedin  user if updatedby is not passed to the api} 
+	 * Update a recipe with Recipe object and set the updatedby property to
+	 * {principal/loggedin  user if updatedby is not passed to the api}
 	 * @mapsTo /kitchenworld/api/recipes/{id}
 	 * @param id
 	 * @param recipe
@@ -209,7 +218,8 @@ public class RecipeController {
 	 */
 	@ApiOperation(value = "Update a recipe by id",response = ResponseEntity.class)
 	@PutMapping(value="{id}", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Recipe> updateRecipe(@PathVariable("id") Long id, @Valid @RequestBody Recipe recipe, Principal principal){
+	public ResponseEntity<Recipe> updateRecipe(@PathVariable("id") Long id, @Valid @RequestBody Recipe recipe,
+											   Principal principal){
 
 		recipe.setRcpId(id);
 		if(recipe.getRcpUpdatedBy()==null) {
@@ -225,7 +235,8 @@ public class RecipeController {
 
 
 	/**
-	 * Update  recipeid with Recipe object and image file and set the updatedby property to {principal/loggedin  user} if updatedby is not passed to the api} 
+	 * Update  recipeid with Recipe object and image file and set the updatedby property
+	 * to {principal/loggedin  user} if updatedby is not passed to the api}
 	 * /kitchenworld/api/recipes/{id}
 	 * @param id
 	 * @param recipe
@@ -235,7 +246,8 @@ public class RecipeController {
 	 */
 	@ApiOperation(value = "Update a recipe by id along with updating the recipe  image",response = ResponseEntity.class)
 	@PutMapping(value="{id}", consumes=MediaType.MULTIPART_FORM_DATA_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Object> updateRecipe(@PathVariable("id") Long id, @Valid @RequestPart Recipe recipe, @RequestPart("recipeImgFile") MultipartFile uploadFile, Principal principal){
+	public ResponseEntity<Object> updateRecipe(@PathVariable("id") Long id, @Valid @RequestPart Recipe recipe,
+											   @RequestPart("recipeImgFile") MultipartFile uploadFile, Principal principal){
 
 		recipe.setRcpId(id);
 		if(recipe.getRcpUpdatedBy()==null || recipe.getRcpUpdatedBy() == 0) {
@@ -253,7 +265,8 @@ public class RecipeController {
 				LOGGER.error("Error saving image ",ex);
 				List<String>list = new ArrayList<>();
 				list.add(ex.getLocalizedMessage());
-				return new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ", list),HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, "Image could not be saved: ",
+						list),HttpStatus.BAD_REQUEST);
 			}			
 
 		}
@@ -263,6 +276,20 @@ public class RecipeController {
 			throw new RecipeNotFoundException("Recipe with id "+id+" not found");
 		}
 		return ResponseEntity.ok(updatedRecipe);
+	}
+
+	@ApiOperation(value = "Download the recipe",response = ResponseEntity.class)
+	@GetMapping(value = "download/pdf/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public ResponseEntity<ByteArrayResource> downloadRecipePdf(@PathVariable("id") Long recipeId) throws Exception {
+
+		Recipe recipe = recipeService.getRecipe(recipeId);
+		ByteArrayResource resource = new ByteArrayResource(fileUtil.createRecipePdfInputSteam(recipe).toByteArray());
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="+recipe.getRcpName()+".pdf")
+				.contentType(MediaType.APPLICATION_OCTET_STREAM)
+				.body(resource);
+
 	}
 
 

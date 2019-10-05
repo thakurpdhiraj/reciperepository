@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.tcs.demo.recipe.bean;
 
 import java.io.Serializable;
@@ -124,6 +121,15 @@ public class Recipe implements Serializable {
      */
     public int getGroupId() {
       return groupId;
+    }
+
+    public String getGroupDescription(){
+      switch (this){
+        case LESSTHANFIVE: return "< 5";
+        case FIVETOTEN: return "5 - 10";
+        case MORETHANTEN: return "> 10";
+        default: return "-";
+      }
     }
 
   }
