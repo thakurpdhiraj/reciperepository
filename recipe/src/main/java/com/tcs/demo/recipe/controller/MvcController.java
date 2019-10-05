@@ -34,13 +34,16 @@ public class MvcController {
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	EncryptionUtil encryptionUtil;
+
 	@GetMapping({"/","/home"})
 	public ModelAndView  returnHomePage(Principal user,HttpServletResponse response) throws GeneralSecurityException{
 
 		User sessionUser = userService.getUserByLoginId(user.getName());	
 		response.addCookie(new Cookie("ed", sessionUser.getUsrId().toString()));
 		String encodedBasic = Base64.getEncoder() 
-				.encodeToString((sessionUser.getUsrLoginId()+":"+EncryptionUtil.decrypt(sessionUser.getUsrPassword())) .getBytes());
+				.encodeToString((sessionUser.getUsrLoginId()+":"+encryptionUtil.decrypt(sessionUser.getUsrPassword())) .getBytes());
 		response.addCookie(new Cookie("ba",encodedBasic)); // basic authentication header value of encoded username:password 
 		return new ModelAndView ("redirect:home.html");
 		

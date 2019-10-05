@@ -36,7 +36,7 @@ import com.tcs.demo.recipe.bean.ApiError;
 import com.tcs.demo.recipe.bean.Recipe;
 import com.tcs.demo.recipe.service.RecipeService;
 import com.tcs.demo.recipe.service.UserService;
-import com.tcs.demo.recipe.util.FileUploadUtil;
+import com.tcs.demo.recipe.util.FileUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -60,6 +60,9 @@ public class RecipeController {
 
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	FileUtil fileUtil;
 
 	/**
 	 * Get all recipes based on the limit and page parameter 
@@ -137,7 +140,7 @@ public class RecipeController {
 			String path = "";
 			try {
 
-				path = FileUploadUtil.uploadFile(uploadFile);
+				path = fileUtil.uploadFile(uploadFile);
 				LOGGER.info("File uploaded successfully to path {}",path);
 				recipe.setRcpImagePath(path);
 
@@ -243,7 +246,7 @@ public class RecipeController {
 			String path = "";
 			try {
 
-				path = FileUploadUtil.uploadFile(uploadFile);
+				path = fileUtil.uploadFile(uploadFile);
 				LOGGER.info("File uploaded successfully to path {}",path);
 				recipe.setRcpImagePath(path);
 			} catch (IOException ex) {

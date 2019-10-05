@@ -33,13 +33,16 @@ public class MultiHttpSecurityConfig {
 	@Autowired
 	SecurityUserDetailService securityUserDetailService;
 
+	@Autowired
+	EncryptionUtil encryptionUtil;
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new PasswordEncoder() {
 			@Override
 			public String encode(CharSequence rawPassword) {
 				try {
-					return EncryptionUtil.encrypt(rawPassword.toString());
+					return encryptionUtil.encrypt(rawPassword.toString());
 				} catch (GeneralSecurityException e) {
 					return null;
 				}
@@ -48,7 +51,7 @@ public class MultiHttpSecurityConfig {
 			@Override
 			public boolean matches(CharSequence rawPassword, String encodedPassword) {
 				try {
-					return rawPassword.toString().equals(EncryptionUtil.decrypt(encodedPassword));
+					return rawPassword.toString().equals(encryptionUtil.decrypt(encodedPassword));
 				} catch (GeneralSecurityException e) {
 					return false;
 				}

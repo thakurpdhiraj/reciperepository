@@ -4,6 +4,10 @@
 package com.tcs.demo.recipe.util;
 
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
@@ -20,16 +24,17 @@ import javax.crypto.spec.SecretKeySpec;
  * @author Dhiraj
  *
  */
+@Component
+@PropertySource("file:${user.home}/recipe-config.properties")
 public class EncryptionUtil {
 
 	//128 bit (16 char) aes string
-	
-	private static final String AESKEY = "ukPLOkuqozUQAqwf";   //store in properties file for security
-	private static final String INITIALIZATIONVECTOR = "ukPLOkuqozUQAqwf";
 
-	private EncryptionUtil() {
-		throw new IllegalStateException("Utility class");
-	}
+	@Value("${aes.key:ukPLOkuqozUQAqwf}")
+	private String AESKEY ;   //store in properties file for security
+
+	@Value("${aes.iv:ukPLOkuqozUQAqwf}")
+	private String INITIALIZATIONVECTOR ;
 
 	/**
 	 * Encrypt the text using 128 bit AES encryption. 
@@ -38,7 +43,7 @@ public class EncryptionUtil {
 	 * @throws UnsupportedEncodingException 
 	 * @throws GeneralSecurityException 
 	 */
-	public static String encrypt(String textToEncrypt) throws GeneralSecurityException{
+	public String encrypt(String textToEncrypt) throws GeneralSecurityException{
 		IvParameterSpec iv = new IvParameterSpec(INITIALIZATIONVECTOR.getBytes(StandardCharsets.UTF_8));
 		SecretKeySpec skeySpec = new SecretKeySpec(AESKEY.getBytes(StandardCharsets.UTF_8), "AES");
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
@@ -55,7 +60,7 @@ public class EncryptionUtil {
 	 * @throws GeneralSecurityException 
 	 * @throws UnsupportedEncodingException 
 	 */
-	public static String decrypt(String textToDecrypt) throws GeneralSecurityException{
+	public String decrypt(String textToDecrypt) throws GeneralSecurityException{
 		IvParameterSpec iv = new IvParameterSpec(INITIALIZATIONVECTOR.getBytes(StandardCharsets.UTF_8));
 		SecretKeySpec skeySpec = new SecretKeySpec(AESKEY.getBytes(StandardCharsets.UTF_8), "AES");
 
