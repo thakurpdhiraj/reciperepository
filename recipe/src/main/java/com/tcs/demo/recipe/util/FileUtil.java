@@ -68,7 +68,7 @@ public class FileUtil {
 		document.open();
 		document.add(new Paragraph("Recipe : "+recipe.getRcpName()));
 		try {
-			Image image = Image.getInstance("D:\\IntelliJ Workspace\\recipe\\src\\main\\resources\\static\\"+recipe.getRcpImagePath());
+			Image image = Image.getInstance(recipe.getRcpImagePath());
 			image.scaleAbsolute(150f, 150f);
 			document.add(image);
 		}catch(Exception e){

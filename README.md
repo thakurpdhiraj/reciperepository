@@ -18,6 +18,7 @@ along with some dummy recipe data using the <code>data.sql</code> file</li>
 <li>Project uses H2 as the embedded database and a <code>data base file</code> with name <code>recipe-db</code> is created in the user directory. To change the name of the file go to <code>application.properties</code> and change the value of <code>spring.datasource.url</code>. For more info visit <a href="http://www.h2database.com/html/faq.html">http://www.h2database.com/html/faq.html</a>.<br>  
 <b>Note:</b>  Data will not be permanently persisted unless you change the value of <code>spring.jpa.hibernate.ddl-auto</code>  to <code>update</code></li>
 <li>By default, the H2 console is enabled and it hosted at <a href="http://localhost:8080/kitchenworld/h2-console/">http://localhost:8080/kitchenworld/h2-console/</a>. This can be changed in <code>application.properties</code> by changing the value of <code>spring.h2.console.enabled</code> and <code>spring.h2.console.path</code></li>
+<li>Encryption keys are configured to use external properties file at ${user.home}/recipe-config.properties. You can change the location and name of the file in EncryptionUtil.java.</li>
 </ol>
 
 # Project Structure
