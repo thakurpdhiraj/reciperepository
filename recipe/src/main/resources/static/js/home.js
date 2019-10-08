@@ -199,7 +199,7 @@ function deleteRecipe(id,event){
 function downloadRecipePDF(id,event){
     event.stopPropagation();
     var iframe = document.getElementById("downloadFrame");
-    iframe .src = "api/recipes/download/pdf/"+id;
+    iframe.src = "api/recipes/download/pdf/"+id;
 }
 
 /**
