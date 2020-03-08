@@ -368,6 +368,7 @@ function displayRecipeModalForCreate(){
 	mod.find('#recipe-updatedat-label').hide();
 	mod.find('#recipe-img').hide();
 	mod.find('#recipe-delete-button').hide();
+	mod.find('#recipe-download-button').hide();
 
 	//show the all mandatory  field
 	mod.find('#recipe-mandatory-label').show();
@@ -385,7 +386,7 @@ function displayRecipeModalForCreate(){
 		mod.find('#recipe-mandatory-label').hide();
 		mod.find('#recipe-img').show();
 		mod.find('#recipe-delete-button').show();
-
+    mod.find('#recipe-download-button').show();
 		refreshModal(mod);
 
 	});

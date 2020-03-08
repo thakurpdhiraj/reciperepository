@@ -1,8 +1,14 @@
-/**
- * 
- */
+/** */
 package com.tcs.demo.recipe.util;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.List;
+import com.itextpdf.text.ListItem;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.tcs.demo.recipe.bean.Recipe;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,19 +20,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.List;
-import com.itextpdf.text.ListItem;
-import com.itextpdf.text.Paragraph;
-import com.tcs.demo.recipe.bean.Recipe;
 
 /**
  * File uploading utility.
- * 
- * @author Dhiraj
  *
+ * @author Dhiraj
  */
 @Component
 public class FileUtil {
@@ -37,7 +35,7 @@ public class FileUtil {
 
   /**
    * Upload file to User home directory
-   * 
+   *
    * @param file
    * @return
    * @throws IOException
@@ -52,7 +50,7 @@ public class FileUtil {
     LOGGER.info("Attempting to save file {} to {} ", file.getOriginalFilename(), path.getParent());
 
     if (!path.getParent().toFile().exists()) // create directory if it does not exist. Mostly during
-                                             // first time upload
+      // first time upload
       Files.createDirectories(path.getParent());
     Files.write(path, bytes, StandardOpenOption.CREATE);
     return path.toString();
@@ -60,7 +58,7 @@ public class FileUtil {
 
   /**
    * Create the bytearrayoutputstream for downloading pdf
-   * 
+   *
    * @param recipe
    * @return
    * @throws DocumentException
@@ -69,6 +67,7 @@ public class FileUtil {
   public ByteArrayOutputStream createRecipePdfInputSteam(Recipe recipe) throws DocumentException {
     Document document = new Document();
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    PdfWriter writer = PdfWriter.getInstance(document, byteArrayOutputStream); // not unused
     document.open();
     document.add(new Paragraph("Recipe : " + recipe.getRcpName()));
     try {
