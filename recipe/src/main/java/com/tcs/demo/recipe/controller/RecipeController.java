@@ -4,7 +4,6 @@ package com.tcs.demo.recipe.controller;
 import com.itextpdf.text.DocumentException;
 import com.tcs.demo.recipe.bean.ApiError;
 import com.tcs.demo.recipe.bean.Recipe;
-import com.tcs.demo.recipe.bean.RecipeDto;
 import com.tcs.demo.recipe.service.RecipeService;
 import com.tcs.demo.recipe.service.UserService;
 import com.tcs.demo.recipe.util.FileUtil;
@@ -88,21 +87,20 @@ public class RecipeController {
 
   /**
    * Get single recipe
-   *
-   * @mapsTo /kitchenworld/api/recipes/{id}
+   * /kitchenworld/api/recipes/{id}
    * @param id
    * @return
    */
   @ApiOperation(value = "Get a single recipe  by id", response = ResponseEntity.class)
   @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RecipeDto> getRecipeById(@PathVariable("id") Long id) {
+  public ResponseEntity<Recipe> getRecipeById(@PathVariable("id") Long id) {
 
     Recipe recipe = recipeService.getRecipe(id);
     if (recipe == null) {
       throw new RecipeNotFoundException("Recipe not found for id " + id);
     }
-    RecipeDto recipeDto = modelMapper.map(recipe, RecipeDto.class);
-    return ResponseEntity.ok(recipeDto);
+
+    return ResponseEntity.ok(recipe);
   }
 
   /**
@@ -124,9 +122,8 @@ public class RecipeController {
 
   /**
    * Add a new recipe with multipart/form-data support
-   *
-   * @mapsTo /kitchenworld/api/recipes
-   * @param recipeDto
+   *  /kitchenworld/api/recipes
+   * @param recipe
    * @param uploadFile
    * @return
    */
@@ -135,7 +132,7 @@ public class RecipeController {
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> saveRecipeWithMultiPart(
-      @Valid @RequestPart RecipeDto recipeDto,
+      @Valid @RequestPart Recipe recipe,
       @RequestPart("recipeImgFile") MultipartFile uploadFile) {
 
     if (!uploadFile.isEmpty()) {
@@ -144,7 +141,7 @@ public class RecipeController {
 
         path = fileUtil.uploadFile(uploadFile);
         LOGGER.info("File uploaded successfully to path {}", path);
-        recipeDto.setRcpImagePath(path);
+        recipe.setRcpImagePath(path);
 
       } catch (IOException ex) {
         LOGGER.error("File upload failed  to path {}", path, ex);
@@ -155,7 +152,7 @@ public class RecipeController {
             HttpStatus.BAD_REQUEST);
       }
     }
-    Recipe recipe = modelMapper.map(recipeDto, Recipe.class);
+    //Recipe recipe = modelMapper.map(recipeDto, Recipe.class);
 
     recipe = recipeService.addRecipe(recipe);
 
@@ -173,16 +170,15 @@ public class RecipeController {
   /**
    * Add a new recipe with application/json support
    *
-   * @param recipeDto
+   * @param recipe
    * @return
    */
   @ApiOperation(value = "Add a new recipe", response = ResponseEntity.class)
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Recipe> saveRecipe(@Valid @RequestBody RecipeDto recipeDto) {
+  public ResponseEntity<Recipe> saveRecipe(@Valid @RequestBody Recipe recipe) {
 
-    Recipe recipe = modelMapper.map(recipeDto, Recipe.class);
     recipe = recipeService.addRecipe(recipe);
 
     URI uri =
@@ -198,8 +194,7 @@ public class RecipeController {
 
   /**
    * Delete a recipe and update table with the person deleting the recipe
-   *
-   * @mapsTo /kitchenworld/api/recipes/{id}
+   * /kitchenworld/api/recipes/{id}
    * @param id
    * @param editor
    * @return
@@ -217,10 +212,9 @@ public class RecipeController {
   /**
    * Update a recipe with Recipe object and set the updatedby property to {principal/loggedin user
    * if updatedby is not passed to the api}
-   *
-   * @mapsTo /kitchenworld/api/recipes/{id}
+   * /kitchenworld/api/recipes/{id}
    * @param id
-   * @param recipeDto
+   * @param recipe
    * @param principal
    * @return
    */
@@ -230,13 +224,12 @@ public class RecipeController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Recipe> updateRecipe(
-      @PathVariable("id") Long id, @Valid @RequestBody RecipeDto recipeDto, Principal principal) {
+      @PathVariable("id") Long id, @Valid @RequestBody Recipe recipe, Principal principal) {
 
-    recipeDto.setRcpId(id);
-    if (recipeDto.getRcpUpdatedBy() == null) {
-      recipeDto.setRcpUpdatedBy(userService.getUserByLoginId(principal.getName()).getUsrId());
+    recipe.setRcpId(id);
+    if (recipe.getRcpUpdatedBy() == null) {
+      recipe.setRcpUpdatedBy(userService.getUserByLoginId(principal.getName()).getUsrId());
     }
-    Recipe recipe = modelMapper.map(recipeDto, Recipe.class);
     recipe = recipeService.updateRecipe(recipe);
     if (recipe == null) {
       throw new RecipeNotFoundException("Recipe with id " + id + " not found");
@@ -249,7 +242,7 @@ public class RecipeController {
    * {principal/loggedin user} if updatedby is not passed to the api} /kitchenworld/api/recipes/{id}
    *
    * @param id
-   * @param recipeDto
+   * @param recipe
    * @param uploadFile
    * @param principal
    * @return
@@ -263,13 +256,13 @@ public class RecipeController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> updateRecipe(
       @PathVariable("id") Long id,
-      @Valid @RequestPart RecipeDto recipeDto,
+      @Valid @RequestPart Recipe recipe,
       @RequestPart("recipeImgFile") MultipartFile uploadFile,
       Principal principal) {
 
-    recipeDto.setRcpId(id);
-    if (recipeDto.getRcpUpdatedBy() == null || recipeDto.getRcpUpdatedBy() == 0) {
-      recipeDto.setRcpUpdatedBy(userService.getUserByLoginId(principal.getName()).getUsrId());
+    recipe.setRcpId(id);
+    if (recipe.getRcpUpdatedBy() == null || recipe.getRcpUpdatedBy() == 0) {
+      recipe.setRcpUpdatedBy(userService.getUserByLoginId(principal.getName()).getUsrId());
     }
 
     if (!uploadFile.isEmpty()) {
@@ -278,7 +271,7 @@ public class RecipeController {
 
         path = fileUtil.uploadFile(uploadFile);
         LOGGER.info("File uploaded successfully to path {}", path);
-        recipeDto.setRcpImagePath(path);
+        recipe.setRcpImagePath(path);
       } catch (IOException ex) {
         LOGGER.error("Error saving image ", ex);
         List<String> list = new ArrayList<>();
@@ -288,7 +281,6 @@ public class RecipeController {
             HttpStatus.BAD_REQUEST);
       }
     }
-    Recipe recipe = modelMapper.map(recipeDto, Recipe.class);
     recipe = recipeService.updateRecipe(recipe);
     if (recipe == null) {
       throw new RecipeNotFoundException("Recipe with id " + id + " not found");

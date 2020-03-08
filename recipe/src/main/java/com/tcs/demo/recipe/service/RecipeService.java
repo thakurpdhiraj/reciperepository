@@ -26,7 +26,8 @@ public interface RecipeService {
 	
 	/**
 	 * Delete a recipe using id
-	 * @param id
+	 * @param rcpId
+	 * @param editor
 	 */
 	Recipe deleteRecipe(Long rcpId,Long editor);
 	
@@ -39,7 +40,7 @@ public interface RecipeService {
 	
 	/**
 	 * Get arecipe by id
-	 * @param id
+	 * @param rcpId
 	 * @return
 	 */
 	Recipe getRecipe(Long rcpId);

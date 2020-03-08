@@ -23,7 +23,7 @@ public interface UserService {
 	
 	/**
 	 * Get the user details by id
-	 * @param id
+	 * @param usrId
 	 * @return User
 	 */
 	User getUserById(Long usrId);

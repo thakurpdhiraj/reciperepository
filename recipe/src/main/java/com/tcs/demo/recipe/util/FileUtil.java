@@ -80,6 +80,7 @@ public class FileUtil {
     List orderedList = getRecipeOrderedList(recipe);
     document.add(orderedList);
     document.close();
+    writer.close();
     return byteArrayOutputStream;
   }
 
