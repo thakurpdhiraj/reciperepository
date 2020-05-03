@@ -4,13 +4,11 @@ A single page web application which allows users to manage their favourite recip
 <ul>
   <li>Java 8</li>
   <li>Apache Maven</li>
-  <li>Bootstrap 3</li>
-  <li>Spring Boot</li>
 </ul>
 
 # Quick Start
 <ol>
-<li>Import project in Eclipse / Spring Tool Suite</li>
+<li>Clone project in IDE</li>
 <li>Find <code>RecipeApplication.java</code>, select 'Run As' > 'Java Application'.</li>
 <li>Point browser to <a href="http://localhost:8080/kitchenworld/">http://localhost:8080/kitchenworld/</a>. If you want to change the context go to <code>application.properties</code> and change the value of <code>server.servlet.context-path</code></li>
 <li>You should be redirected to a login page. By default a user with admin rights is created with credentials -> Username :  <code>admin</code> & Password : <code>password</code>
@@ -21,9 +19,15 @@ along with some dummy recipe data using the <code>data.sql</code> file</li>
 <li>Encryption keys are configured to use external properties file at ${user.home}/recipe-config.properties. You can change the location and name of the file in EncryptionUtil.java.</li>
 </ol>
 
-# Project Structure
-![alt text](projectstructure/ps1.PNG)
-![alt text](projectstructure/ps2.PNG)
+# Home
+![Home](https://github.com/dhi37th/projectscreenshots/blob/master/Project_Screenshot/reciperepository/home.PNG)
+
+# Single Recipe
+![Recipe](https://github.com/dhi37th/projectscreenshots/blob/master/Project_Screenshot/reciperepository/recipe.PNG)
+
+# New Recipe
+![New Recipe](https://github.com/dhi37th/projectscreenshots/blob/master/Project_Screenshot/reciperepository/newRecipe.PNG)
+
 
 # API Endpoints
 Access to API Documentation is over <a href="http://localhost:8080/kitchenworld/swagger-ui.html">http://localhost:8080/kitchenworld/swagger-ui.html</a> and <a href="http://localhost:8080/kitchenworld/v2/api-docs">http://localhost:8080/kitchenworld/v2/api-docs</a>
@@ -39,7 +43,3 @@ All endpoints are configured to accept Basic Authentication.<b>(For production g
 <li><code>PUT</code> update recipe : <a href="#">http://localhost:8080/kitchenworld/api/recipes/{id}</a></li>
 <li><code>DELETE</code> recipe : <a href="#">http://localhost:8080/kitchenworld/api/recipes/{id}</a></li>
 </ol>
-
-# Tech Stack Choice
-
-Spring Boot was chosen for this application as it has excellent support for embedded database h2 and spring security configuration along with easy and quick development support to create backend REST api and also configure spring data jpa and testing using JUnit and Mockito .The annotation support by spring boot helped to keep the development time within 3-4 days . JQuery supports asynchronous calls to backend api and json formats. Boostrap has support for modal and column grids which is used to display recipe details. Documentation of REST api is setup using swagger which provides a html page to view and execute calls. 
